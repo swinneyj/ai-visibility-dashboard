@@ -12,7 +12,7 @@ _project_root = Path(__file__).parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request
 
 from scanner.technical import AIVisibilityScanner, scan_domain
 
@@ -61,7 +61,11 @@ def _load_history(slug: str) -> list[dict]:
 
 @app.route("/")
 def index():
-    return send_from_directory(app.static_folder, "index.html")
+    """Serve the dashboard frontend."""
+    index_path = _project_root / "static" / "index.html"
+    if index_path.exists():
+        return index_path.read_text(encoding="utf-8"), 200, {"Content-Type": "text/html; charset=utf-8"}
+    return "Dashboard not found", 404
 
 
 @app.route("/api/scan", methods=["POST"])
@@ -158,6 +162,22 @@ def api_trends():
     return jsonify({"url": url, "trends": trends})
 
 
+# Error handlers — return JSON, never HTML
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Not found"}), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify({"error": "Internal server error", "detail": str(e)[:200]}), 500
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    return jsonify({"error": "Server error", "detail": str(e)[:200]}), 500
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8081))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port)

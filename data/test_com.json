@@ -1,0 +1,195 @@
+[
+  {
+    "url": "test.com",
+    "business_name": "test.com",
+    "timestamp": "2026-07-24T21:48:52.194620",
+    "overall_score": 11,
+    "grade": "F",
+    "scores": {
+      "technical_readiness": 7,
+      "schema_readiness": 0,
+      "content_quality": 10,
+      "social_meta": 0,
+      "performance": 65,
+      "overall": 11,
+      "grade": "F"
+    },
+    "summary": {
+      "pass_count": 1,
+      "warn_count": 3,
+      "issue_count": 2,
+      "total_checks": 6,
+      "domain": "test.com",
+      "business_name": "test.com",
+      "city": "",
+      "scan_timestamp": "2026-07-24T21:48:52.194620"
+    },
+    "checks": [
+      {
+        "check": "page_size",
+        "message": "Reasonable page size (0.0 KB)",
+        "details": ""
+      },
+      {
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "details": "llms.txt helps AI engines understand what pages to cite",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "details": "AI crawlers may still crawl your site",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "details": "Sitemaps help AI crawlers discover your content",
+        "fix": "Create a sitemap.xml listing your important pages"
+      },
+      {
+        "check": "page_access",
+        "message": "Cannot access page: Connection Error: HTTPSConnectionPool(host='test.com', port=443): Max retries exceeded with url: / (Caused by NameReso",
+        "details": "",
+        "fix": "Ensure your site is accessible over HTTPS"
+      },
+      {
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "details": "[Errno -5] No address associated with hostname",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      }
+    ],
+    "passes": [
+      {
+        "check": "page_size",
+        "message": "Reasonable page size (0.0 KB)",
+        "details": ""
+      }
+    ],
+    "warnings": [
+      {
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "details": "llms.txt helps AI engines understand what pages to cite",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "details": "AI crawlers may still crawl your site",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "details": "Sitemaps help AI crawlers discover your content",
+        "fix": "Create a sitemap.xml listing your important pages"
+      }
+    ],
+    "issues": [
+      {
+        "check": "page_access",
+        "message": "Cannot access page: Connection Error: HTTPSConnectionPool(host='test.com', port=443): Max retries exceeded with url: / (Caused by NameReso",
+        "details": "",
+        "fix": "Ensure your site is accessible over HTTPS"
+      },
+      {
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "details": "[Errno -5] No address associated with hostname",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      }
+    ],
+    "recommendations": [
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "page_access",
+        "message": "Cannot access page: Connection Error: HTTPSConnectionPool(host='test.com', port=443): Max retries exceeded with url: / (Caused by NameReso",
+        "fix": "Ensure your site is accessible over HTTPS"
+      },
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "fix": "Create a sitemap.xml listing your important pages"
+      }
+    ],
+    "ai_visibility": null,
+    "competitors": [],
+    "details": {
+      "technical": {
+        "llms_txt": {
+          "status": "not_found",
+          "url": "https://test.com/llms.txt"
+        },
+        "robots_txt": {
+          "url": "https://test.com/robots.txt",
+          "ai_crawlers": {},
+          "found": false
+        },
+        "sitemap": {
+          "status": "not_found",
+          "url": "https://test.com/sitemap.xml"
+        },
+        "page_fetchable": false,
+        "fetch_error": "Connection Error: HTTPSConnectionPool(host='test.com', port=443): Max retries exceeded with url: / (Caused by NameReso"
+      },
+      "schema": {
+        "error": "Cannot fetch page"
+      },
+      "content": {
+        "error": "No HTML parsed"
+      },
+      "crawlers": {
+        "GPTBot": {
+          "status_code": 0,
+          "accessible": false
+        },
+        "OAI-SearchBot": {
+          "status_code": 0,
+          "accessible": false
+        },
+        "ClaudeBot": {
+          "status_code": 0,
+          "accessible": false
+        }
+      },
+      "social": {
+        "error": "No HTML parsed"
+      },
+      "performance": {
+        "ssl": {
+          "valid": false,
+          "error": "[Errno -5] No address associated with hostname"
+        },
+        "http_version": "unknown",
+        "html_size_kb": 0.0
+      }
+    }
+  }
+]
