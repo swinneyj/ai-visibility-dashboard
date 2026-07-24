@@ -1,0 +1,44 @@
+{
+  "example.com": [
+    {
+      "timestamp": "2026-07-24T20:26:27.798573",
+      "overall_score": 21,
+      "technical_score": 42,
+      "schema_score": 0,
+      "content_score": 10,
+      "issues": 3,
+      "warnings": 6
+    },
+    {
+      "timestamp": "2026-07-24T20:26:35.075388",
+      "overall_score": 21,
+      "technical_score": 42,
+      "schema_score": 0,
+      "content_score": 10,
+      "issues": 3,
+      "warnings": 6
+    }
+  ],
+  "google.com": [
+    {
+      "timestamp": "2026-07-24T20:28:43.011764",
+      "overall_score": 19,
+      "technical_score": 30,
+      "schema_score": 0,
+      "content_score": 15,
+      "issues": 4,
+      "warnings": 10
+    }
+  ],
+  "stripe.com": [
+    {
+      "timestamp": "2026-07-24T20:30:00.616061",
+      "overall_score": 63,
+      "technical_score": 70,
+      "schema_score": 45,
+      "content_score": 65,
+      "issues": 1,
+      "warnings": 4
+    }
+  ]
+}

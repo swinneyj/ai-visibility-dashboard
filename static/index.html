@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #111111;
+    --bg-card-hover: #1a1a1a;
+    --border: #1e1e1e;
+    --text: #f5f5f0;
+    --text-muted: #888888;
+    --text-dim: #555555;
+    --accent: #e85d2f;
+    --accent-hover: #d04d20;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --radius: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+  .logo span { color: var(--accent); }
+  .logo-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-left: 8px;
+  }
+
+  /* Scan Form */
+  .scan-section {
+    padding: 60px 0 40px;
+    text-align: center;
+  }
+  .scan-section h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .scan-section h1 span { color: var(--accent); }
+  .scan-section p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 560px;
+    margin: 12px auto 32px;
+  }
+  .scan-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 640px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+  .scan-form input[type="text"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .scan-form input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+  .scan-form input[type="text"]::placeholder {
+    color: var(--text-dim);
+  }
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg-card-hover); }
+  .btn-sm { padding: 8px 14px; font-size: 12px; }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Scan Progress */
+  .scan-progress {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .scan-progress.active { display: block; }
+  .progress-bar {
+    width: 100%;
+    max-width: 400px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px auto;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s;
+    border-radius: 2px;
+  }
+  .progress-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .progress-step { display: flex; align-items: center; gap: 8px; }
+  .progress-step .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .progress-step.active { color: var(--text); }
+  .progress-step.active .dot { background: var(--accent); }
+  .progress-step.done { color: var(--green); }
+  .progress-step.done .dot { background: var(--green); }
+  .progress-step.error { color: var(--red); }
+  .progress-step.error .dot { background: var(--red); }
+
+  /* Dashboard */
+  .dashboard {
+    display: none;
+    padding: 20px 0 60px;
+  }
+  .dashboard.active { display: block; }
+
+  /* Score Overview */
+  .score-overview {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (min-width: 768px) {
+    .score-overview { grid-template-columns: 280px 1fr; }
+  }
+  .score-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  .score-number {
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .score-number.good { color: var(--green); }
+  .score-number.ok { color: var(--yellow); }
+  .score-number.bad { color: var(--red); }
+  .score-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+  .score-subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 8px;
+  }
+
+  /* Per-Engine Scores */
+  .engine-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 640px) {
+    .engine-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .engine-score {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .engine-score .engine-name {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .engine-score .engine-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .status-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .status-badge.found { background: rgba(34,197,94,0.15); color: var(--green); }
+  .status-badge.not_found { background: rgba(239,68,68,0.15); color: var(--red); }
+  .status-badge.partial { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .status-badge.skipped, .status-badge.error { background: rgba(85,85,85,0.15); color: var(--text-dim); }
+
+  /* Section Headers */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 28px 0 16px;
+  }
+  .section-header h2 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .section-header .count {
+    font-size: 12px;
+    color: var(--text-dim);
+    background: var(--bg-card);
+    padding: 2px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  /* Check Results */
+  .checks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .check-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .check-item:hover { border-color: #333; }
+  .check-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .check-item-header .left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .check-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .check-icon.pass { background: rgba(34,197,94,0.15); color: var(--green); }
+  .check-icon.warn { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .check-icon.fail { background: rgba(239,68,68,0.15); color: var(--red); }
+  .check-icon.info { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .check-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .check-message {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .check-category {
+    font-size: 10px;
+    color: var(--text-dim);
+    background: rgba(85,85,85,0.2);
+    padding: 1px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .check-details {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .check-item.expanded .check-details { display: block; }
+  .check-details .detail-label {
+    color: var(--text-dim);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 6px;
+  }
+  .check-details .detail-value {
+    color: var(--text-muted);
+    word-break: break-word;
+  }
+  .check-details .fix-box {
+    background: rgba(232,93,47,0.08);
+    border: 1px solid rgba(232,93,47,0.2);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 8px;
+  }
+  .check-details .fix-box .fix-title {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .check-details .fix-box .fix-text {
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  /* Filter Tabs */
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .filter-tab {
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .filter-tab:hover { background: var(--bg-card); color: var(--text); }
+  .filter-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* Trend Chart */
+  .trend-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+  }
+  .trend-section h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .chart-container {
+    position: relative;
+    height: 220px;
+    width: 100%;
+  }
+
+  /* Recommendations */
+  .rec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .rec-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .rec-priority {
+    width: 4px;
+    height: 100%;
+    min-height: 40px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .rec-priority.high { background: var(--red); }
+  .rec-priority.medium { background: var(--yellow); }
+  .rec-priority.low { background: var(--blue); }
+  .rec-content { flex: 1; min-width: 0; }
+  .rec-content .rec-category {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .rec-content .rec-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    margin: 2px 0;
+  }
+  .rec-content .rec-message {
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+  .rec-content .rec-fix {
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 4px;
+  }
+
+  /* Competitors */
+  .competitor-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .competitor-tag {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+
+  /* API Key Config */
+  .config-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 16px;
+    display: none;
+  }
+  .config-section.active { display: block; }
+  .config-section h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .config-section p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .config-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 640px) {
+    .config-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .config-field label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .config-field input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+  }
+  .config-field input:focus { border-color: var(--accent); }
+  .config-field input::placeholder { color: var(--text-dim); font-size: 12px; }
+
+  /* Error Banner */
+  .error-banner {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--red);
+    display: none;
+  }
+  .error-banner.active { display: block; }
+
+  /* Info banner */
+  .info-banner {
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.15);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .info-banner a {
+    color: var(--accent);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 640px) {
+    .check-item-header .left { flex-wrap: wrap; }
+    .check-message { display: none; }
+    .score-card .score-number { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">AI Visibility <span>Dashboard</span> <span class="logo-sub">by AIEO</span></div>
+    <div>
+      <button class="btn btn-sm btn-secondary" onclick="toggleConfig()">API Keys</button>
+      <button class="btn btn-sm btn-secondary" onclick="document.getElementById('url-input').focus(); document.getElementById('url-input').select()">New Scan</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <!-- Config Section -->
+  <div class="config-section" id="config-section">
+    <h3>AI Engine API Keys</h3>
+    <p>Add your own API keys to enable live AI visibility checks against ChatGPT, Claude, Gemini, and Perplexity. These are stored only in your browser's session.</p>
+    <div class="config-grid">
+      <div class="config-field">
+        <label>OpenAI (ChatGPT)</label>
+        <input type="password" id="key-openai" placeholder="sk-..." value="">
+      </div>
+      <div class="config-field">
+        <label>Anthropic (Claude)</label>
+        <input type="password" id="key-anthropic" placeholder="sk-ant-..." value="">
+      </div>
+      <div class="config-field">
+        <label>Google (Gemini)</label>
+        <input type="password" id="key-gemini" placeholder="AIza..." value="">
+      </div>
+      <div class="config-field">
+        <label>Perplexity</label>
+        <input type="password" id="key-perplexity" placeholder="pplx-..." value="">
+      </div>
+    </div>
+    <div style="margin-top:10px;text-align:right;">
+      <button class="btn btn-sm btn-secondary" onclick="saveKeys()">Save to Session</button>
+    </div>
+  </div>
+
+  <!-- Scan Section -->
+  <section class="scan-section" id="scan-section">
+    <h1>Is your business the answer <span>AI gives?</span></h1>
+    <p>Scan your website across 17+ technical checks and 4 AI engines to see exactly where you stand — and what to fix.</p>
+    <div class="scan-form">
+      <input type="text" id="url-input" placeholder="yourwebsite.com" autofocus>
+      <input type="text" id="name-input" placeholder="Business name (optional)">
+      <input type="text" id="keywords-input" placeholder="Industry keywords (e.g., plumbing, dental)">
+      <button class="btn btn-primary" id="scan-btn" onclick="startScan()">Run Visibility Scan</button>
+    </div>
+
+    <!-- Scan Progress -->
+    <div class="scan-progress" id="scan-progress">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
+        <span class="spinner"></span>
+        <span style="font-size:14px;color:var(--text-muted)" id="progress-text">Scanning...</span>
+      </div>
+      <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-steps" id="progress-steps"></div>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section class="dashboard" id="dashboard">
+    <!-- Error Banner -->
+    <div class="error-banner" id="error-banner"></div>
+
+    <!-- Score Overview -->
+    <div class="score-overview">
+      <div class="score-card">
+        <div class="score-number" id="overall-score">--</div>
+        <div class="score-label">Overall AI Visibility Score</div>
+        <div class="score-subtitle" id="score-subtitle">Scanned 0 checks</div>
+      </div>
+      <div>
+        <!-- Per-Engine Visibility -->
+        <div class="section-header" style="margin-top:0;">
+          <h2>AI Engine Visibility</h2>
+        </div>
+        <div class="engine-grid" id="engine-grid"></div>
+
+        <!-- Info about AI checks -->
+        <div class="info-banner" id="ai-info-banner">
+          <span id="ai-info-text">Add API keys above to check live visibility in ChatGPT, Claude, Gemini, and Perplexity.</span>
+          <a onclick="toggleConfig()">Configure API Keys</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trend Chart -->
+    <div class="trend-section" id="trend-section" style="display:none;">
+      <h3>Score Trends Over Time</h3>
+      <div class="chart-container">
+        <canvas id="trend-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Competitors -->
+    <div id="competitors-section" style="display:none;">
+      <div class="section-header">
+        <h2>Competitors Mentioned</h2>
+        <span class="count" id="competitor-count">0</span>
+      </div>
+      <div class="competitor-list" id="competitor-list"></div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="section-header">
+      <h2>Recommendations</h2>
+      <span class="count" id="rec-count">0</span>
+    </div>
+    <div class="rec-list" id="rec-list"></div>
+
+    <!-- Technical Checks -->
+    <div class="section-header">
+      <h2>Technical &amp; GEO Audit</h2>
+      <span class="count" id="check-count">0</span>
+    </div>
+    <div class="filter-tabs" id="filter-tabs">
+      <button class="filter-tab active" data-filter="all" onclick="filterChecks('all')">All</button>
+      <button class="filter-tab" data-filter="pass" onclick="filterChecks('pass')">Pass</button>
+      <button class="filter-tab" data-filter="warn" onclick="filterChecks('warn')">Warn</button>
+      <button class="filter-tab" data-filter="fail" onclick="filterChecks('fail')">Fail</button>
+      <button class="filter-tab" data-filter="geo" onclick="filterChecks('geo')">GEO</button>
+      <button class="filter-tab" data-filter="technical" onclick="filterChecks('technical')">SEO</button>
+      <button class="filter-tab" data-filter="content" onclick="filterChecks('content')">Content</button>
+      <button class="filter-tab" data-filter="authority" onclick="filterChecks('authority')">Authority</button>
+    </div>
+    <div class="checks-list" id="checks-list"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    AI Visibility Dashboard — Open-source. Your data stays in your browser and your server.
+  </div>
+</footer>
+
+<script>
+// State
+let currentData = null;
+let trendChart = null;
+let currentFilter = 'all';
+
+// Load saved keys from sessionStorage
+document.addEventListener('DOMContentLoaded', () => {
+  const keys = ['openai', 'anthropic', 'gemini', 'perplexity'];
+  keys.forEach(k => {
+    const val = sessionStorage.getItem(`api_key_${k}`);
+    if (val) document.getElementById(`key-${k}`).value = val;
+  });
+});
+
+function toggleConfig() {
+  document.getElementById('config-section').classList.toggle('active');
+}
+
+function saveKeys() {
+  const keys = ['openai', 'anthropic', 'gemini', 'perplexity'];
+  keys.forEach(k => {
+    const val = document.getElementById(`key-${k}`).value;
+    if (val) sessionStorage.setItem(`api_key_${k}`, val);
+  });
+  alert('API keys saved to session (cleared when you close the tab).');
+  document.getElementById('config-section').classList.remove('active');
+}
+
+function getKeys() {
+  return {
+    openai_key: document.getElementById('key-openai').value || sessionStorage.getItem('api_key_openai') || '',
+    anthropic_key: document.getElementById('key-anthropic').value || sessionStorage.getItem('api_key_anthropic') || '',
+    gemini_key: document.getElementById('key-gemini').value || sessionStorage.getItem('api_key_gemini') || '',
+    perplexity_key: document.getElementById('key-perplexity').value || sessionStorage.getItem('api_key_perplexity') || '',
+  };
+}
+
+const STEPS = [
+  'Reading the website',
+  'Checking technical signals',
+  'Analyzing structured data',
+  'Checking AI crawler access',
+  'Scoring technical readiness',
+  'Querying AI engines',
+  'Generating recommendations',
+];
+
+async function startScan() {
+  const url = document.getElementById('url-input').value.trim();
+  if (!url) { alert('Enter a website URL'); return; }
+
+  const btn = document.getElementById('scan-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Scanning...';
+
+  const progress = document.getElementById('scan-progress');
+  progress.classList.add('active');
+
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+  const stepsContainer = document.getElementById('progress-steps');
+
+  // Build steps
+  stepsContainer.innerHTML = STEPS.map((s, i) =>
+    `<div class="progress-step" data-step="${i}"><span class="dot"></span>${s}</div>`
+  ).join('');
+
+  let currentStep = 0;
+
+  function advanceStep(msg) {
+    const steps = stepsContainer.querySelectorAll('.progress-step');
+    if (currentStep > 0) {
+      steps[currentStep - 1]?.classList.add('done');
+    }
+    if (currentStep < steps.length) {
+      steps[currentStep]?.classList.add('active');
+      progressText.textContent = msg || STEPS[currentStep] || 'Working...';
+    }
+    progressFill.style.width = `${Math.min((currentStep / STEPS.length) * 100, 95)}%`;
+    currentStep++;
+  }
+
+  advanceStep('Starting scan...');
+
+  const keys = getKeys();
+  const businessName = document.getElementById('name-input').value.trim() || url;
+  const keywordsStr = document.getElementById('keywords-input').value.trim();
+  const industryKeywords = keywordsStr ? keywordsStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+  advanceStep('Scanning website...');
+
+  try {
+    // Check if any AI keys provided
+    hasAiKeys = keys.openai_key || keys.anthropic_key || keys.gemini_key || keys.perplexity_key;
+    if (!hasAiKeys) {
+      // Skip AI steps
+      document.querySelectorAll('.progress-step[data-step]').forEach(el => {
+        const idx = parseInt(el.dataset.step);
+        if (idx >= 4 && idx <= 5) el.style.display = 'none';
+      });
+    }
+
+    const resp = await fetch('/api/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        url,
+        business_name: businessName,
+        industry_keywords: industryKeywords,
+        ...keys,
+      }),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error || `HTTP ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    currentData = data;
+
+    advanceStep('Finalizing...');
+    progressFill.style.width = '100%';
+    progressText.textContent = 'Scan complete!';
+
+    setTimeout(() => {
+      progress.classList.remove('active');
+      renderDashboard(data);
+      btn.disabled = false;
+      btn.innerHTML = 'Run Visibility Scan';
+    }, 500);
+
+  } catch (err) {
+    const steps = stepsContainer.querySelectorAll('.progress-step');
+    steps[currentStep]?.classList.add('error');
+    progressText.textContent = `Error: ${err.message}`;
+    btn.disabled = false;
+    btn.innerHTML = 'Run Visibility Scan';
+    showError(err.message);
+  }
+}
+
+function showError(msg) {
+  const banner = document.getElementById('error-banner');
+  banner.textContent = msg;
+  banner.classList.add('active');
+  setTimeout(() => banner.classList.remove('active'), 8000);
+}
+
+function renderDashboard(data) {
+  const dash = document.getElementById('dashboard');
+  dash.classList.add('active');
+
+  // Scroll to dashboard
+  dash.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Overall Score
+  const score = data.overall_score || 0;
+  const scoreEl = document.getElementById('overall-score');
+  const gradeDisplay = data.grade ? `${score} (${data.grade})` : score;
+  scoreEl.textContent = gradeDisplay;
+  scoreEl.className = 'score-number ' + (score >= 70 ? 'good' : score >= 40 ? 'ok' : 'bad');
+
+  const totalChecks = data.summary?.total_checks || 0;
+  document.getElementById('score-subtitle').textContent =
+    `Scanned ${totalChecks} technical checks`;
+
+  // Engine visibility grid
+  renderEngineGrid(data.ai_visibility);
+
+  // Trend Chart
+  renderTrends(data.url);
+
+  // Competitors
+  renderCompetitors(data.competitors);
+
+  // Recommendations
+  renderRecommendations(data.recommendations);
+
+  // Checks (passes + warnings + issues)
+  const allChecks = [
+    ...(data.passes || []).map(c => ({...c, status: 'pass'})),
+    ...(data.warnings || []).map(c => ({...c, status: 'warn'})),
+    ...(data.issues || []).map(c => ({...c, status: 'fail'})),
+  ];
+  renderChecks(allChecks);
+}
+
+function renderEngineGrid(ai) {
+  const grid = document.getElementById('engine-grid');
+  const banner = document.getElementById('ai-info-banner');
+
+  if (!ai || !ai.results || ai.results.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-dim);font-size:13px;
+        background:var(--bg-card);border:1px solid var(--border);border-radius:8px;">
+        No AI engine checks run. Add API keys to enable.
+      </div>
+    `;
+    banner.style.display = 'block';
+    document.getElementById('ai-info-text').textContent =
+      'Configure API keys above to check live visibility in ChatGPT, Claude, Gemini, and Perplexity.';
+    return;
+  }
+
+  banner.style.display = 'block';
+  document.getElementById('ai-info-text').textContent =
+    'AI engine results shown below. Re-scan to refresh.';
+
+  // Check if any were actually queried vs skipped
+  const anyQueried = ai.results.some(r => r.status !== 'skipped');
+  if (!anyQueried) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-dim);font-size:13px;
+        background:var(--bg-card);border:1px solid var(--border);border-radius:8px;">
+        All AI checks were skipped — no API keys configured. Add keys in the API Keys panel above.
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = ai.results.map(r => {
+    let label = r.status === 'found' ? 'Found' :
+                r.status === 'not_found' ? 'Not Found' :
+                r.status === 'partial' ? 'Partial' :
+                r.status === 'error' ? 'Error' : 'Skipped';
+    let icon = r.status === 'found' ? '✓' :
+               r.status === 'not_found' ? '✗' :
+               r.status === 'partial' ? '~' : '—';
+    let mentionText = '';
+    if (r.mentioned && r.sentiment) {
+      mentionText = ` • ${r.sentiment}`;
+    }
+    if (r.competitors && r.competitors.length > 0 && r.mentioned) {
+      mentionText += ` • ${r.competitors.length} competitor(s)`;
+    }
+    return `
+      <div class="engine-score">
+        <span class="engine-name">${icon} ${r.engine}</span>
+        <span class="engine-status">
+          <span class="status-badge ${r.status}">${label}</span>
+          ${mentionText ? `<span style="font-size:11px;color:var(--text-dim)">${mentionText}</span>` : ''}
+        </span>
+      </div>
+    `;
+  }).join('');
+}
+
+async function renderTrends(url) {
+  const section = document.getElementById('trend-section');
+  const canvas = document.getElementById('trend-chart');
+
+  try {
+    const resp = await fetch(`/api/trends?url=${encodeURIComponent(url)}`);
+    const data = await resp.json();
+    const trends = data.trends || [];
+
+    if (trends.length < 2) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+
+    const labels = trends.map(t => {
+      const d = new Date(t.timestamp);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+
+    const overall = trends.map(t => t.overall_score);
+    const techScores = trends.map(t => t.technical_score);
+    const aiScores = trends.map(t => t.ai_score);
+
+    if (trendChart) trendChart.destroy();
+
+    trendChart = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Overall Score',
+            data: overall,
+            borderColor: '#e85d2f',
+            backgroundColor: 'rgba(232,93,47,0.1)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+          ...(techScores.some(s => s !== null) ? [{
+            label: 'Technical',
+            data: techScores,
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59,130,246,0.05)',
+            fill: false,
+            tension: 0.3,
+            borderDash: [5, 5],
+            pointRadius: 3,
+          }] : []),
+          ...(aiScores.some(s => s !== null) ? [{
+            label: 'AI Visibility',
+            data: aiScores,
+            borderColor: '#a855f7',
+            backgroundColor: 'rgba(168,85,247,0.05)',
+            fill: false,
+            tension: 0.3,
+            borderDash: [5, 5],
+            pointRadius: 3,
+          }] : []),
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: { color: '#888', font: { size: 11 }, boxWidth: 12, padding: 12 },
+          },
+        },
+        scales: {
+          x: {
+            ticks: { color: '#555', font: { size: 10 } },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+          },
+          y: {
+            min: 0,
+            max: 100,
+            ticks: { color: '#555', font: { size: 10 } },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+          },
+        },
+      },
+    });
+  } catch (e) {
+    section.style.display = 'none';
+  }
+}
+
+function renderCompetitors(competitors) {
+  const section = document.getElementById('competitors-section');
+  const list = document.getElementById('competitor-list');
+  const count = document.getElementById('competitor-count');
+
+  if (!competitors || competitors.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  count.textContent = competitors.length;
+  list.innerHTML = competitors.map(c =>
+    `<span class="competitor-tag">${c}</span>`
+  ).join('');
+}
+
+function renderRecommendations(recs) {
+  const list = document.getElementById('rec-list');
+  const count = document.getElementById('rec-count');
+
+  if (!recs || recs.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:13px;">No issues found — your site looks great!</div>';
+    count.textContent = '0';
+    return;
+  }
+
+  count.textContent = recs.length;
+  list.innerHTML = recs.map(r => `
+    <div class="rec-item">
+      <div class="rec-priority ${r.priority}"></div>
+      <div class="rec-content">
+        <div class="rec-category">${r.category} • ${r.priority} priority</div>
+        <div class="rec-title">${r.check}</div>
+        <div class="rec-message">${r.message}</div>
+        ${r.fix ? `<div class="rec-fix">→ ${r.fix}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderChecks(checks) {
+  const list = document.getElementById('checks-list');
+  const count = document.getElementById('check-count');
+  count.textContent = checks.length;
+
+  applyFilter(checks);
+}
+
+function applyFilter(allChecks) {
+  const list = document.getElementById('checks-list');
+  const allFormatted = allChecks.map(c => ({
+    name: c.check || c.name,
+    status: c.status || 'info',
+    message: c.message,
+    details: c.details || '',
+    fix: c.fix || '',
+    category: c.category || c.type || 'technical',
+  }));
+
+  let filtered = allFormatted;
+  if (currentFilter === 'pass') filtered = allFormatted.filter(c => c.status === 'pass');
+  else if (currentFilter === 'warn') filtered = allFormatted.filter(c => c.status === 'warn');
+  else if (currentFilter === 'fail') filtered = allFormatted.filter(c => c.status === 'fail');
+  else if (currentFilter === 'geo') filtered = allFormatted.filter(c => c.category === 'geo');
+  else if (currentFilter === 'technical') filtered = allFormatted.filter(c => c.category === 'technical');
+  else if (currentFilter === 'content') filtered = allFormatted.filter(c => c.category === 'content');
+  else if (currentFilter === 'authority') filtered = allFormatted.filter(c => c.category === 'authority');
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:13px;">No checks match this filter.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map((c, i) => {
+    const icon = c.status === 'pass' ? '✓' : c.status === 'warn' ? '!' : c.status === 'fail' ? '✗' : 'i';
+    return `
+      <div class="check-item" onclick="toggleCheck(this)" data-index="${i}">
+        <div class="check-item-header">
+          <div class="left">
+            <span class="check-icon ${c.status}">${icon}</span>
+            <span class="check-name">${c.name}</span>
+            <span class="check-message">${c.message}</span>
+          </div>
+          <span class="check-category">${c.category}</span>
+        </div>
+        <div class="check-details">
+          ${c.details ? `<div class="detail-label">Details</div><div class="detail-value">${c.details}</div>` : ''}
+          ${c.fix ? `<div class="fix-box"><div class="fix-title">Recommended Fix</div><div class="fix-text">${c.fix}</div></div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('expanded');
+}
+
+function filterChecks(filter) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.filter === filter);
+  });
+  if (currentData) {
+    // Re-apply using the formatted data
+    const allChecks = [
+      ...(currentData.passes || []).map(c => ({...c, status: 'pass'})),
+      ...(currentData.warnings || []).map(c => ({...c, status: 'warn'})),
+      ...(currentData.issues || []).map(c => ({...c, status: 'fail'})),
+    ];
+    if (allChecks.length > 0) applyFilter(allChecks);
+  }
+}
+</script>
+</body>
+</html>

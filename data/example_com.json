@@ -1,0 +1,968 @@
+[
+  {
+    "url": "example.com",
+    "business_name": "Example Corp",
+    "timestamp": "2026-07-24T20:31:45.029613",
+    "overall_score": 21,
+    "grade": "F",
+    "scores": {
+      "technical_readiness": 42,
+      "schema_readiness": 0,
+      "content_quality": 10,
+      "social_meta": 0,
+      "performance": 65,
+      "overall": 21,
+      "grade": "F"
+    },
+    "summary": {
+      "pass_count": 7,
+      "warn_count": 11,
+      "issue_count": 3,
+      "total_checks": 21,
+      "domain": "example.com",
+      "business_name": "Example Corp",
+      "city": "",
+      "scan_timestamp": "2026-07-24T20:31:45.029613"
+    },
+    "checks": [
+      {
+        "check": "title_tag",
+        "message": "Title tag found (14 chars)",
+        "details": "Example Domain"
+      },
+      {
+        "check": "headings",
+        "message": "Good heading structure (1 H1, 0 H2s)",
+        "details": "Example Domain"
+      },
+      {
+        "check": "viewport",
+        "message": "Viewport meta tag found",
+        "details": "Mobile-friendly signals present"
+      },
+      {
+        "check": "language",
+        "message": "Language declared: en",
+        "details": ""
+      },
+      {
+        "check": "markdown_negotiation",
+        "message": "Standard HTML response (no Markdown negotiation)",
+        "details": "Most sites don't offer this yet; not a blocker"
+      },
+      {
+        "check": "http2",
+        "message": "Using HTTP/11",
+        "details": "Faster, modern protocol"
+      },
+      {
+        "check": "page_size",
+        "message": "Reasonable page size (0.5 KB)",
+        "details": ""
+      },
+      {
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "details": "llms.txt helps AI engines understand what pages to cite",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "details": "AI crawlers may still crawl your site",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "details": "Sitemaps help AI crawlers discover your content",
+        "fix": "Create a sitemap.xml listing your important pages"
+      },
+      {
+        "check": "content_length",
+        "message": "Very thin content (18 words)",
+        "details": "AI engines favor substantive pages with detailed information",
+        "fix": "Add more comprehensive content (aim for 500+ words)"
+      },
+      {
+        "check": "canonical",
+        "message": "No canonical tag",
+        "details": "",
+        "fix": "Canonical tags prevent duplicate content issues with crawlers"
+      },
+      {
+        "check": "internal_links",
+        "message": "Very few internal links (0)",
+        "details": "Internal links help crawlers discover more of your content",
+        "fix": "Add contextual internal links to your important pages"
+      },
+      {
+        "check": "content_structure",
+        "message": "No lists found in content",
+        "details": "AI engines prefer structured, scannable content",
+        "fix": "Add bullet/numbered lists to break up text"
+      },
+      {
+        "check": "content_paragraphs",
+        "message": "Only 1 substantial paragraphs",
+        "details": "AI engines need enough text to understand your business",
+        "fix": "Add 3+ descriptive paragraphs about your business"
+      },
+      {
+        "check": "contact_info",
+        "message": "Limited contact info (0/3 signals)",
+        "details": "AI engines need contact info to recommend local businesses",
+        "fix": "Add phone, address, and email to your site"
+      },
+      {
+        "check": "open_graph",
+        "message": "Incomplete Open Graph tags (0/3)",
+        "details": "Open Graph tags control how your site appears when shared on social/AI",
+        "fix": "Add og:title, og:description, and og:image meta tags"
+      },
+      {
+        "check": "twitter_cards",
+        "message": "No Twitter Card tags",
+        "details": "Twitter Cards improve sharing appearance",
+        "fix": "Add twitter:card, twitter:title, twitter:description, twitter:image"
+      },
+      {
+        "check": "meta_description",
+        "message": "No meta description found",
+        "details": "",
+        "fix": "Add a meta description with your value proposition and keywords"
+      },
+      {
+        "check": "schema",
+        "message": "No relevant schema.org structured data found",
+        "details": "AI engines heavily rely on structured data for understanding businesses",
+        "fix": "Add JSON-LD structured data: Organization, LocalBusiness, FAQPage, BreadcrumbList"
+      },
+      {
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "details": "dictionary update sequence element #0 has length 1; 2 is required",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      }
+    ],
+    "passes": [
+      {
+        "check": "title_tag",
+        "message": "Title tag found (14 chars)",
+        "details": "Example Domain"
+      },
+      {
+        "check": "headings",
+        "message": "Good heading structure (1 H1, 0 H2s)",
+        "details": "Example Domain"
+      },
+      {
+        "check": "viewport",
+        "message": "Viewport meta tag found",
+        "details": "Mobile-friendly signals present"
+      },
+      {
+        "check": "language",
+        "message": "Language declared: en",
+        "details": ""
+      },
+      {
+        "check": "markdown_negotiation",
+        "message": "Standard HTML response (no Markdown negotiation)",
+        "details": "Most sites don't offer this yet; not a blocker"
+      },
+      {
+        "check": "http2",
+        "message": "Using HTTP/11",
+        "details": "Faster, modern protocol"
+      },
+      {
+        "check": "page_size",
+        "message": "Reasonable page size (0.5 KB)",
+        "details": ""
+      }
+    ],
+    "warnings": [
+      {
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "details": "llms.txt helps AI engines understand what pages to cite",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "details": "AI crawlers may still crawl your site",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "details": "Sitemaps help AI crawlers discover your content",
+        "fix": "Create a sitemap.xml listing your important pages"
+      },
+      {
+        "check": "content_length",
+        "message": "Very thin content (18 words)",
+        "details": "AI engines favor substantive pages with detailed information",
+        "fix": "Add more comprehensive content (aim for 500+ words)"
+      },
+      {
+        "check": "canonical",
+        "message": "No canonical tag",
+        "details": "",
+        "fix": "Canonical tags prevent duplicate content issues with crawlers"
+      },
+      {
+        "check": "internal_links",
+        "message": "Very few internal links (0)",
+        "details": "Internal links help crawlers discover more of your content",
+        "fix": "Add contextual internal links to your important pages"
+      },
+      {
+        "check": "content_structure",
+        "message": "No lists found in content",
+        "details": "AI engines prefer structured, scannable content",
+        "fix": "Add bullet/numbered lists to break up text"
+      },
+      {
+        "check": "content_paragraphs",
+        "message": "Only 1 substantial paragraphs",
+        "details": "AI engines need enough text to understand your business",
+        "fix": "Add 3+ descriptive paragraphs about your business"
+      },
+      {
+        "check": "contact_info",
+        "message": "Limited contact info (0/3 signals)",
+        "details": "AI engines need contact info to recommend local businesses",
+        "fix": "Add phone, address, and email to your site"
+      },
+      {
+        "check": "open_graph",
+        "message": "Incomplete Open Graph tags (0/3)",
+        "details": "Open Graph tags control how your site appears when shared on social/AI",
+        "fix": "Add og:title, og:description, and og:image meta tags"
+      },
+      {
+        "check": "twitter_cards",
+        "message": "No Twitter Card tags",
+        "details": "Twitter Cards improve sharing appearance",
+        "fix": "Add twitter:card, twitter:title, twitter:description, twitter:image"
+      }
+    ],
+    "issues": [
+      {
+        "check": "meta_description",
+        "message": "No meta description found",
+        "details": "",
+        "fix": "Add a meta description with your value proposition and keywords"
+      },
+      {
+        "check": "schema",
+        "message": "No relevant schema.org structured data found",
+        "details": "AI engines heavily rely on structured data for understanding businesses",
+        "fix": "Add JSON-LD structured data: Organization, LocalBusiness, FAQPage, BreadcrumbList"
+      },
+      {
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "details": "dictionary update sequence element #0 has length 1; 2 is required",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      }
+    ],
+    "recommendations": [
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "meta_description",
+        "message": "No meta description found",
+        "fix": "Add a meta description with your value proposition and keywords"
+      },
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "schema",
+        "message": "No relevant schema.org structured data found",
+        "fix": "Add JSON-LD structured data: Organization, LocalBusiness, FAQPage, BreadcrumbList"
+      },
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "fix": "Create a sitemap.xml listing your important pages"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "content_length",
+        "message": "Very thin content (18 words)",
+        "fix": "Add more comprehensive content (aim for 500+ words)"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "canonical",
+        "message": "No canonical tag",
+        "fix": "Canonical tags prevent duplicate content issues with crawlers"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "internal_links",
+        "message": "Very few internal links (0)",
+        "fix": "Add contextual internal links to your important pages"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "content_structure",
+        "message": "No lists found in content",
+        "fix": "Add bullet/numbered lists to break up text"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "content_paragraphs",
+        "message": "Only 1 substantial paragraphs",
+        "fix": "Add 3+ descriptive paragraphs about your business"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "contact_info",
+        "message": "Limited contact info (0/3 signals)",
+        "fix": "Add phone, address, and email to your site"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "open_graph",
+        "message": "Incomplete Open Graph tags (0/3)",
+        "fix": "Add og:title, og:description, and og:image meta tags"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "twitter_cards",
+        "message": "No Twitter Card tags",
+        "fix": "Add twitter:card, twitter:title, twitter:description, twitter:image"
+      }
+    ],
+    "ai_visibility": null,
+    "competitors": [],
+    "details": {
+      "technical": {
+        "llms_txt": {
+          "status": "not_found",
+          "url": "https://example.com/llms.txt"
+        },
+        "robots_txt": {
+          "url": "https://example.com/robots.txt",
+          "ai_crawlers": {},
+          "found": false
+        },
+        "sitemap": {
+          "status": "not_found",
+          "url": "https://example.com/sitemap.xml"
+        },
+        "page_fetchable": true,
+        "status_code": 200,
+        "content_type": "text/html",
+        "title": {
+          "text": "Example Domain",
+          "length": 14
+        },
+        "meta_description": {
+          "text": "",
+          "length": 0
+        },
+        "headings": {
+          "h1_count": 1,
+          "h2_count": 0,
+          "h1_texts": [
+            "Example Domain"
+          ],
+          "h2_texts": []
+        },
+        "content": {
+          "word_count": 18,
+          "char_count": 139
+        },
+        "canonical": "",
+        "viewport": "width=device-width, initial-scale=1",
+        "language": "en",
+        "links": {
+          "total": 1,
+          "internal": 0,
+          "external": 1
+        },
+        "markdown_negotiation": {
+          "accept_markdown_sent": true,
+          "response_content_type": "text/html",
+          "returns_markdown": false
+        }
+      },
+      "schema": {
+        "jsonld_count": 0,
+        "types_found": [],
+        "relevant_types": [],
+        "has_organization": false,
+        "has_local_business": false,
+        "has_faq": false,
+        "has_breadcrumbs": false,
+        "has_product": false
+      },
+      "content": {
+        "has_lists": false,
+        "has_tables": false,
+        "has_formatted_text": false,
+        "lists_count": 0,
+        "tables_count": 0,
+        "images_total": 0,
+        "images_with_alt": 0,
+        "dates_in_content": false,
+        "substantial_paragraphs": 1,
+        "contact_info": {
+          "has_email": false,
+          "has_phone": false,
+          "has_address": false
+        }
+      },
+      "crawlers": {
+        "GPTBot": {
+          "status_code": 0,
+          "accessible": false
+        },
+        "OAI-SearchBot": {
+          "status_code": 0,
+          "accessible": false
+        },
+        "ClaudeBot": {
+          "status_code": 0,
+          "accessible": false
+        }
+      },
+      "social": {
+        "og_tags": {},
+        "has_og_title": false,
+        "has_og_description": false,
+        "has_og_image": false,
+        "twitter_cards": {},
+        "has_twitter_card": false
+      },
+      "performance": {
+        "ssl": {
+          "valid": false,
+          "error": "dictionary update sequence element #0 has length 1; 2 is required"
+        },
+        "http_version": "HTTP/11",
+        "html_size_kb": 0.5
+      }
+    }
+  },
+  {
+    "url": "example.com",
+    "business_name": "example.com",
+    "timestamp": "2026-07-24T20:31:52.008851",
+    "overall_score": 21,
+    "grade": "F",
+    "scores": {
+      "technical_readiness": 42,
+      "schema_readiness": 0,
+      "content_quality": 10,
+      "social_meta": 0,
+      "performance": 65,
+      "overall": 21,
+      "grade": "F"
+    },
+    "summary": {
+      "pass_count": 7,
+      "warn_count": 11,
+      "issue_count": 3,
+      "total_checks": 21,
+      "domain": "example.com",
+      "business_name": "example.com",
+      "city": "",
+      "scan_timestamp": "2026-07-24T20:31:52.008851"
+    },
+    "checks": [
+      {
+        "check": "title_tag",
+        "message": "Title tag found (14 chars)",
+        "details": "Example Domain"
+      },
+      {
+        "check": "headings",
+        "message": "Good heading structure (1 H1, 0 H2s)",
+        "details": "Example Domain"
+      },
+      {
+        "check": "viewport",
+        "message": "Viewport meta tag found",
+        "details": "Mobile-friendly signals present"
+      },
+      {
+        "check": "language",
+        "message": "Language declared: en",
+        "details": ""
+      },
+      {
+        "check": "markdown_negotiation",
+        "message": "Standard HTML response (no Markdown negotiation)",
+        "details": "Most sites don't offer this yet; not a blocker"
+      },
+      {
+        "check": "http2",
+        "message": "Using HTTP/11",
+        "details": "Faster, modern protocol"
+      },
+      {
+        "check": "page_size",
+        "message": "Reasonable page size (0.5 KB)",
+        "details": ""
+      },
+      {
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "details": "llms.txt helps AI engines understand what pages to cite",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "details": "AI crawlers may still crawl your site",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "details": "Sitemaps help AI crawlers discover your content",
+        "fix": "Create a sitemap.xml listing your important pages"
+      },
+      {
+        "check": "content_length",
+        "message": "Very thin content (18 words)",
+        "details": "AI engines favor substantive pages with detailed information",
+        "fix": "Add more comprehensive content (aim for 500+ words)"
+      },
+      {
+        "check": "canonical",
+        "message": "No canonical tag",
+        "details": "",
+        "fix": "Canonical tags prevent duplicate content issues with crawlers"
+      },
+      {
+        "check": "internal_links",
+        "message": "Very few internal links (0)",
+        "details": "Internal links help crawlers discover more of your content",
+        "fix": "Add contextual internal links to your important pages"
+      },
+      {
+        "check": "content_structure",
+        "message": "No lists found in content",
+        "details": "AI engines prefer structured, scannable content",
+        "fix": "Add bullet/numbered lists to break up text"
+      },
+      {
+        "check": "content_paragraphs",
+        "message": "Only 1 substantial paragraphs",
+        "details": "AI engines need enough text to understand your business",
+        "fix": "Add 3+ descriptive paragraphs about your business"
+      },
+      {
+        "check": "contact_info",
+        "message": "Limited contact info (0/3 signals)",
+        "details": "AI engines need contact info to recommend local businesses",
+        "fix": "Add phone, address, and email to your site"
+      },
+      {
+        "check": "open_graph",
+        "message": "Incomplete Open Graph tags (0/3)",
+        "details": "Open Graph tags control how your site appears when shared on social/AI",
+        "fix": "Add og:title, og:description, and og:image meta tags"
+      },
+      {
+        "check": "twitter_cards",
+        "message": "No Twitter Card tags",
+        "details": "Twitter Cards improve sharing appearance",
+        "fix": "Add twitter:card, twitter:title, twitter:description, twitter:image"
+      },
+      {
+        "check": "meta_description",
+        "message": "No meta description found",
+        "details": "",
+        "fix": "Add a meta description with your value proposition and keywords"
+      },
+      {
+        "check": "schema",
+        "message": "No relevant schema.org structured data found",
+        "details": "AI engines heavily rely on structured data for understanding businesses",
+        "fix": "Add JSON-LD structured data: Organization, LocalBusiness, FAQPage, BreadcrumbList"
+      },
+      {
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "details": "dictionary update sequence element #0 has length 1; 2 is required",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      }
+    ],
+    "passes": [
+      {
+        "check": "title_tag",
+        "message": "Title tag found (14 chars)",
+        "details": "Example Domain"
+      },
+      {
+        "check": "headings",
+        "message": "Good heading structure (1 H1, 0 H2s)",
+        "details": "Example Domain"
+      },
+      {
+        "check": "viewport",
+        "message": "Viewport meta tag found",
+        "details": "Mobile-friendly signals present"
+      },
+      {
+        "check": "language",
+        "message": "Language declared: en",
+        "details": ""
+      },
+      {
+        "check": "markdown_negotiation",
+        "message": "Standard HTML response (no Markdown negotiation)",
+        "details": "Most sites don't offer this yet; not a blocker"
+      },
+      {
+        "check": "http2",
+        "message": "Using HTTP/11",
+        "details": "Faster, modern protocol"
+      },
+      {
+        "check": "page_size",
+        "message": "Reasonable page size (0.5 KB)",
+        "details": ""
+      }
+    ],
+    "warnings": [
+      {
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "details": "llms.txt helps AI engines understand what pages to cite",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "details": "AI crawlers may still crawl your site",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "details": "Sitemaps help AI crawlers discover your content",
+        "fix": "Create a sitemap.xml listing your important pages"
+      },
+      {
+        "check": "content_length",
+        "message": "Very thin content (18 words)",
+        "details": "AI engines favor substantive pages with detailed information",
+        "fix": "Add more comprehensive content (aim for 500+ words)"
+      },
+      {
+        "check": "canonical",
+        "message": "No canonical tag",
+        "details": "",
+        "fix": "Canonical tags prevent duplicate content issues with crawlers"
+      },
+      {
+        "check": "internal_links",
+        "message": "Very few internal links (0)",
+        "details": "Internal links help crawlers discover more of your content",
+        "fix": "Add contextual internal links to your important pages"
+      },
+      {
+        "check": "content_structure",
+        "message": "No lists found in content",
+        "details": "AI engines prefer structured, scannable content",
+        "fix": "Add bullet/numbered lists to break up text"
+      },
+      {
+        "check": "content_paragraphs",
+        "message": "Only 1 substantial paragraphs",
+        "details": "AI engines need enough text to understand your business",
+        "fix": "Add 3+ descriptive paragraphs about your business"
+      },
+      {
+        "check": "contact_info",
+        "message": "Limited contact info (0/3 signals)",
+        "details": "AI engines need contact info to recommend local businesses",
+        "fix": "Add phone, address, and email to your site"
+      },
+      {
+        "check": "open_graph",
+        "message": "Incomplete Open Graph tags (0/3)",
+        "details": "Open Graph tags control how your site appears when shared on social/AI",
+        "fix": "Add og:title, og:description, and og:image meta tags"
+      },
+      {
+        "check": "twitter_cards",
+        "message": "No Twitter Card tags",
+        "details": "Twitter Cards improve sharing appearance",
+        "fix": "Add twitter:card, twitter:title, twitter:description, twitter:image"
+      }
+    ],
+    "issues": [
+      {
+        "check": "meta_description",
+        "message": "No meta description found",
+        "details": "",
+        "fix": "Add a meta description with your value proposition and keywords"
+      },
+      {
+        "check": "schema",
+        "message": "No relevant schema.org structured data found",
+        "details": "AI engines heavily rely on structured data for understanding businesses",
+        "fix": "Add JSON-LD structured data: Organization, LocalBusiness, FAQPage, BreadcrumbList"
+      },
+      {
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "details": "dictionary update sequence element #0 has length 1; 2 is required",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      }
+    ],
+    "recommendations": [
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "meta_description",
+        "message": "No meta description found",
+        "fix": "Add a meta description with your value proposition and keywords"
+      },
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "schema",
+        "message": "No relevant schema.org structured data found",
+        "fix": "Add JSON-LD structured data: Organization, LocalBusiness, FAQPage, BreadcrumbList"
+      },
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "robots.txt",
+        "message": "No robots.txt found",
+        "fix": "Create a robots.txt to explicitly control AI crawler access"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "sitemap.xml",
+        "message": "No sitemap.xml found",
+        "fix": "Create a sitemap.xml listing your important pages"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "content_length",
+        "message": "Very thin content (18 words)",
+        "fix": "Add more comprehensive content (aim for 500+ words)"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "canonical",
+        "message": "No canonical tag",
+        "fix": "Canonical tags prevent duplicate content issues with crawlers"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "internal_links",
+        "message": "Very few internal links (0)",
+        "fix": "Add contextual internal links to your important pages"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "content_structure",
+        "message": "No lists found in content",
+        "fix": "Add bullet/numbered lists to break up text"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "content_paragraphs",
+        "message": "Only 1 substantial paragraphs",
+        "fix": "Add 3+ descriptive paragraphs about your business"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "contact_info",
+        "message": "Limited contact info (0/3 signals)",
+        "fix": "Add phone, address, and email to your site"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "open_graph",
+        "message": "Incomplete Open Graph tags (0/3)",
+        "fix": "Add og:title, og:description, and og:image meta tags"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "twitter_cards",
+        "message": "No Twitter Card tags",
+        "fix": "Add twitter:card, twitter:title, twitter:description, twitter:image"
+      }
+    ],
+    "ai_visibility": null,
+    "competitors": [],
+    "details": {
+      "technical": {
+        "llms_txt": {
+          "status": "not_found",
+          "url": "https://example.com/llms.txt"
+        },
+        "robots_txt": {
+          "url": "https://example.com/robots.txt",
+          "ai_crawlers": {},
+          "found": false
+        },
+        "sitemap": {
+          "status": "not_found",
+          "url": "https://example.com/sitemap.xml"
+        },
+        "page_fetchable": true,
+        "status_code": 200,
+        "content_type": "text/html",
+        "title": {
+          "text": "Example Domain",
+          "length": 14
+        },
+        "meta_description": {
+          "text": "",
+          "length": 0
+        },
+        "headings": {
+          "h1_count": 1,
+          "h2_count": 0,
+          "h1_texts": [
+            "Example Domain"
+          ],
+          "h2_texts": []
+        },
+        "content": {
+          "word_count": 18,
+          "char_count": 139
+        },
+        "canonical": "",
+        "viewport": "width=device-width, initial-scale=1",
+        "language": "en",
+        "links": {
+          "total": 1,
+          "internal": 0,
+          "external": 1
+        },
+        "markdown_negotiation": {
+          "accept_markdown_sent": true,
+          "response_content_type": "text/html",
+          "returns_markdown": false
+        }
+      },
+      "schema": {
+        "jsonld_count": 0,
+        "types_found": [],
+        "relevant_types": [],
+        "has_organization": false,
+        "has_local_business": false,
+        "has_faq": false,
+        "has_breadcrumbs": false,
+        "has_product": false
+      },
+      "content": {
+        "has_lists": false,
+        "has_tables": false,
+        "has_formatted_text": false,
+        "lists_count": 0,
+        "tables_count": 0,
+        "images_total": 0,
+        "images_with_alt": 0,
+        "dates_in_content": false,
+        "substantial_paragraphs": 1,
+        "contact_info": {
+          "has_email": false,
+          "has_phone": false,
+          "has_address": false
+        }
+      },
+      "crawlers": {
+        "GPTBot": {
+          "status_code": 0,
+          "accessible": false
+        },
+        "OAI-SearchBot": {
+          "status_code": 0,
+          "accessible": false
+        },
+        "ClaudeBot": {
+          "status_code": 0,
+          "accessible": false
+        }
+      },
+      "social": {
+        "og_tags": {},
+        "has_og_title": false,
+        "has_og_description": false,
+        "has_og_image": false,
+        "twitter_cards": {},
+        "has_twitter_card": false
+      },
+      "performance": {
+        "ssl": {
+          "valid": false,
+          "error": "dictionary update sequence element #0 has length 1; 2 is required"
+        },
+        "http_version": "HTTP/11",
+        "html_size_kb": 0.5
+      }
+    }
+  }
+]
