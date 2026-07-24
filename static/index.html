@@ -653,12 +653,12 @@
   <section class="scan-section" id="scan-section">
     <h1>Is your business the answer <span>AI gives?</span></h1>
     <p>Scan your website across 17+ technical checks and 4 AI engines to see exactly where you stand — and what to fix.</p>
-    <div class="scan-form">
-      <input type="text" id="url-input" placeholder="yourwebsite.com" autofocus>
+    <form class="scan-form" id="scan-form" onsubmit="event.preventDefault(); startScan()">
+      <input type="text" id="url-input" placeholder="yourbusiness.com" autofocus required>
       <input type="text" id="name-input" placeholder="Business name (optional)">
-      <input type="text" id="keywords-input" placeholder="Industry keywords (e.g., plumbing, dental)">
-      <button class="btn btn-primary" id="scan-btn" onclick="startScan()">Run Visibility Scan</button>
-    </div>
+      <input type="text" id="keywords-input" placeholder="Industry (e.g. plumbing, dental)">
+      <button type="submit" class="btn btn-primary" id="scan-btn">Run Visibility Scan</button>
+    </form>
 
     <!-- Scan Progress -->
     <div class="scan-progress" id="scan-progress">
