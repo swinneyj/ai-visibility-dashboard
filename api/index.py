@@ -16,9 +16,12 @@ from flask import Flask, jsonify, request, send_from_directory
 
 from scanner.technical import AIVisibilityScanner, scan_domain
 
-app = Flask(__name__, static_folder="static", static_url_path="")
+# Use absolute path for static folder
+_static_dir = str(_project_root / "static")
+_data_dir = _project_root / "data"
+app = Flask(__name__, static_folder=_static_dir, static_url_path="")
 
-DATA_DIR = Path(__file__).parent.parent / "data"
+DATA_DIR = _data_dir
 DATA_DIR.mkdir(exist_ok=True)
 
 

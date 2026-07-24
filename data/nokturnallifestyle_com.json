@@ -1,0 +1,492 @@
+[
+  {
+    "url": "nokturnallifestyle.com",
+    "business_name": "Nokturnal Lifestyle Concierge Las Vegas",
+    "timestamp": "2026-07-24T20:46:34.613388",
+    "overall_score": 57,
+    "grade": "D",
+    "scores": {
+      "technical_readiness": 57,
+      "schema_readiness": 45,
+      "content_quality": 50,
+      "social_meta": 100,
+      "performance": 65,
+      "overall": 57,
+      "grade": "D"
+    },
+    "summary": {
+      "pass_count": 17,
+      "warn_count": 4,
+      "issue_count": 1,
+      "total_checks": 22,
+      "domain": "nokturnallifestyle.com",
+      "business_name": "Nokturnal Lifestyle Concierge Las Vegas",
+      "city": "Las Vegas",
+      "scan_timestamp": "2026-07-24T20:46:34.613388"
+    },
+    "checks": [
+      {
+        "check": "robots.txt",
+        "message": "AI crawlers not blocked",
+        "details": "No critical AI crawler restrictions found"
+      },
+      {
+        "check": "sitemap.xml",
+        "message": "Sitemap found with 129 URLs",
+        "details": "https://nokturnallifestyle.com/sitemap.xml"
+      },
+      {
+        "check": "meta_description",
+        "message": "Meta description found (150 chars)",
+        "details": "Plan your Las Vegas nightlife the right way. VIP table service, skip-the-line access, top clubs, poo"
+      },
+      {
+        "check": "headings",
+        "message": "Good heading structure (1 H1, 12 H2s)",
+        "details": "Vegas Done Right. Every Single Night."
+      },
+      {
+        "check": "content_length",
+        "message": "Good content volume (836 words)",
+        "details": ""
+      },
+      {
+        "check": "canonical",
+        "message": "Canonical tag found",
+        "details": "https://www.nokturnallifestyle.com"
+      },
+      {
+        "check": "viewport",
+        "message": "Viewport meta tag found",
+        "details": "Mobile-friendly signals present"
+      },
+      {
+        "check": "language",
+        "message": "Language declared: en",
+        "details": ""
+      },
+      {
+        "check": "internal_links",
+        "message": "Good internal linking (71 links)",
+        "details": ""
+      },
+      {
+        "check": "markdown_negotiation",
+        "message": "Standard HTML response (no Markdown negotiation)",
+        "details": "Most sites don't offer this yet; not a blocker"
+      },
+      {
+        "check": "content_structure",
+        "message": "Content includes 7 lists",
+        "details": "Lists improve AI parseability"
+      },
+      {
+        "check": "content_paragraphs",
+        "message": "20 substantial paragraphs found",
+        "details": ""
+      },
+      {
+        "check": "contact_info",
+        "message": "Good contact info (2/3 signals found)",
+        "details": "Contact info boosts local AI visibility"
+      },
+      {
+        "check": "open_graph",
+        "message": "Open Graph tags found (3/3)",
+        "details": "og:title=Vegas VIP Concierge | Nightlife, Tables & Experiences | Nokt"
+      },
+      {
+        "check": "twitter_cards",
+        "message": "Twitter Card tags found",
+        "details": ""
+      },
+      {
+        "check": "http2",
+        "message": "Using HTTP/11",
+        "details": "Faster, modern protocol"
+      },
+      {
+        "check": "page_size",
+        "message": "Reasonable page size (167.3 KB)",
+        "details": ""
+      },
+      {
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "details": "llms.txt helps AI engines understand what pages to cite",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "check": "title_tag",
+        "message": "Title too long (65 chars)",
+        "details": "Vegas VIP Concierge | Nightlife, Tables & Experiences | Nokturnal",
+        "fix": "Aim for 10-60 characters to avoid truncation"
+      },
+      {
+        "check": "image_alt",
+        "message": "1 images missing alt text",
+        "details": "AI crawlers read alt text to understand images",
+        "fix": "Add descriptive alt text to all images"
+      },
+      {
+        "check": "schema",
+        "message": "Limited structured data (1 types)",
+        "details": "Found: LocalBusiness",
+        "fix": "Add Organization, LocalBusiness, FAQPage, and BreadcrumbList schema"
+      },
+      {
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "details": "dictionary update sequence element #0 has length 1; 2 is required",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      }
+    ],
+    "passes": [
+      {
+        "check": "robots.txt",
+        "message": "AI crawlers not blocked",
+        "details": "No critical AI crawler restrictions found"
+      },
+      {
+        "check": "sitemap.xml",
+        "message": "Sitemap found with 129 URLs",
+        "details": "https://nokturnallifestyle.com/sitemap.xml"
+      },
+      {
+        "check": "meta_description",
+        "message": "Meta description found (150 chars)",
+        "details": "Plan your Las Vegas nightlife the right way. VIP table service, skip-the-line access, top clubs, poo"
+      },
+      {
+        "check": "headings",
+        "message": "Good heading structure (1 H1, 12 H2s)",
+        "details": "Vegas Done Right. Every Single Night."
+      },
+      {
+        "check": "content_length",
+        "message": "Good content volume (836 words)",
+        "details": ""
+      },
+      {
+        "check": "canonical",
+        "message": "Canonical tag found",
+        "details": "https://www.nokturnallifestyle.com"
+      },
+      {
+        "check": "viewport",
+        "message": "Viewport meta tag found",
+        "details": "Mobile-friendly signals present"
+      },
+      {
+        "check": "language",
+        "message": "Language declared: en",
+        "details": ""
+      },
+      {
+        "check": "internal_links",
+        "message": "Good internal linking (71 links)",
+        "details": ""
+      },
+      {
+        "check": "markdown_negotiation",
+        "message": "Standard HTML response (no Markdown negotiation)",
+        "details": "Most sites don't offer this yet; not a blocker"
+      },
+      {
+        "check": "content_structure",
+        "message": "Content includes 7 lists",
+        "details": "Lists improve AI parseability"
+      },
+      {
+        "check": "content_paragraphs",
+        "message": "20 substantial paragraphs found",
+        "details": ""
+      },
+      {
+        "check": "contact_info",
+        "message": "Good contact info (2/3 signals found)",
+        "details": "Contact info boosts local AI visibility"
+      },
+      {
+        "check": "open_graph",
+        "message": "Open Graph tags found (3/3)",
+        "details": "og:title=Vegas VIP Concierge | Nightlife, Tables & Experiences | Nokt"
+      },
+      {
+        "check": "twitter_cards",
+        "message": "Twitter Card tags found",
+        "details": ""
+      },
+      {
+        "check": "http2",
+        "message": "Using HTTP/11",
+        "details": "Faster, modern protocol"
+      },
+      {
+        "check": "page_size",
+        "message": "Reasonable page size (167.3 KB)",
+        "details": ""
+      }
+    ],
+    "warnings": [
+      {
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "details": "llms.txt helps AI engines understand what pages to cite",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "check": "title_tag",
+        "message": "Title too long (65 chars)",
+        "details": "Vegas VIP Concierge | Nightlife, Tables & Experiences | Nokturnal",
+        "fix": "Aim for 10-60 characters to avoid truncation"
+      },
+      {
+        "check": "image_alt",
+        "message": "1 images missing alt text",
+        "details": "AI crawlers read alt text to understand images",
+        "fix": "Add descriptive alt text to all images"
+      },
+      {
+        "check": "schema",
+        "message": "Limited structured data (1 types)",
+        "details": "Found: LocalBusiness",
+        "fix": "Add Organization, LocalBusiness, FAQPage, and BreadcrumbList schema"
+      }
+    ],
+    "issues": [
+      {
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "details": "dictionary update sequence element #0 has length 1; 2 is required",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      }
+    ],
+    "recommendations": [
+      {
+        "priority": "high",
+        "type": "fix",
+        "check": "ssl",
+        "message": "SSL certificate issue",
+        "fix": "Ensure your site has a valid SSL certificate (HTTPS)"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "llms.txt",
+        "message": "No llms.txt file found",
+        "fix": "Create an llms.txt at your domain root following the llmstxt.org spec"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "title_tag",
+        "message": "Title too long (65 chars)",
+        "fix": "Aim for 10-60 characters to avoid truncation"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "image_alt",
+        "message": "1 images missing alt text",
+        "fix": "Add descriptive alt text to all images"
+      },
+      {
+        "priority": "medium",
+        "type": "improve",
+        "check": "schema",
+        "message": "Limited structured data (1 types)",
+        "fix": "Add Organization, LocalBusiness, FAQPage, and BreadcrumbList schema"
+      }
+    ],
+    "ai_visibility": null,
+    "competitors": [],
+    "details": {
+      "technical": {
+        "llms_txt": {
+          "status": "not_found",
+          "url": "https://nokturnallifestyle.com/llms.txt"
+        },
+        "robots_txt": {
+          "url": "https://nokturnallifestyle.com/robots.txt",
+          "ai_crawlers": {
+            "GPTBot": {
+              "status": "not_specified",
+              "type": "training",
+              "description": "OpenAI training bot"
+            },
+            "OAI-SearchBot": {
+              "status": "not_specified",
+              "type": "search",
+              "description": "OpenAI search/retrieval bot"
+            },
+            "ClaudeBot": {
+              "status": "not_specified",
+              "type": "training",
+              "description": "Anthropic training bot"
+            },
+            "Claude-SearchBot": {
+              "status": "not_specified",
+              "type": "search",
+              "description": "Anthropic search/retrieval bot"
+            },
+            "PerplexityBot": {
+              "status": "not_specified",
+              "type": "search",
+              "description": "Perplexity search bot"
+            },
+            "Google-Extended": {
+              "status": "not_specified",
+              "type": "training",
+              "description": "Google AI training bot"
+            },
+            "Applebot-Extended": {
+              "status": "not_specified",
+              "type": "training",
+              "description": "Apple AI training bot"
+            },
+            "CCBot": {
+              "status": "not_specified",
+              "type": "search",
+              "description": "Common Crawl bot (used by some LLMs)"
+            }
+          },
+          "found": true,
+          "content_preview": "User-Agent: *\nAllow: /\n\nSitemap: https://www.nokturnallifestyle.com/sitemap.xml\n"
+        },
+        "sitemap": {
+          "status": "pass",
+          "url": "https://nokturnallifestyle.com/sitemap.xml",
+          "urls_count": 129
+        },
+        "page_fetchable": true,
+        "status_code": 200,
+        "content_type": "text/html; charset=utf-8",
+        "title": {
+          "text": "Vegas VIP Concierge | Nightlife, Tables & Experiences | Nokturnal",
+          "length": 65
+        },
+        "meta_description": {
+          "text": "Plan your Las Vegas nightlife the right way. VIP table service, skip-the-line access, top clubs, pool parties, and personalized concierge experiences.",
+          "length": 150
+        },
+        "headings": {
+          "h1_count": 1,
+          "h2_count": 12,
+          "h1_texts": [
+            "Vegas Done Right. Every Single Night."
+          ],
+          "h2_texts": [
+            "Pick the fastest path into Vegas.",
+            "Plan the whole weekend fast",
+            "Lock the right table tonight",
+            "Need something built around your crew?",
+            "Choose Your Experience",
+            "Most Popular VIP Packages",
+            "Not a Website.A Real Person. In Person.",
+            "We Work With Las Vegas's Best Venues",
+            "200+ Five-Star Reviews",
+            "Get Your Free,No-Obligation Quote"
+          ]
+        },
+        "content": {
+          "word_count": 836,
+          "char_count": 6485
+        },
+        "canonical": "https://www.nokturnallifestyle.com",
+        "viewport": "width=device-width, initial-scale=1",
+        "language": "en",
+        "links": {
+          "total": 86,
+          "internal": 71,
+          "external": 3
+        },
+        "markdown_negotiation": {
+          "accept_markdown_sent": true,
+          "response_content_type": "text/html; charset=utf-8",
+          "returns_markdown": false
+        }
+      },
+      "schema": {
+        "jsonld_count": 1,
+        "types_found": [
+          "LocalBusiness",
+          "WebSite"
+        ],
+        "relevant_types": [
+          "LocalBusiness"
+        ],
+        "has_organization": false,
+        "has_local_business": true,
+        "has_faq": false,
+        "has_breadcrumbs": false,
+        "has_product": false
+      },
+      "content": {
+        "has_lists": true,
+        "has_tables": false,
+        "has_formatted_text": false,
+        "lists_count": 7,
+        "tables_count": 0,
+        "images_total": 13,
+        "images_with_alt": 12,
+        "dates_in_content": false,
+        "substantial_paragraphs": 20,
+        "contact_info": {
+          "has_email": true,
+          "has_phone": true,
+          "has_address": false
+        }
+      },
+      "crawlers": {
+        "GPTBot": {
+          "status_code": 0,
+          "accessible": false
+        },
+        "OAI-SearchBot": {
+          "status_code": 0,
+          "accessible": false
+        },
+        "ClaudeBot": {
+          "status_code": 0,
+          "accessible": false
+        }
+      },
+      "social": {
+        "og_tags": {
+          "og:title": "Vegas VIP Concierge | Nightlife, Tables & Experiences | Nokturnal",
+          "og:description": "Plan your Las Vegas nightlife the right way. VIP table service, skip-the-line access, top clubs, pool parties, and personalized concierge experiences.",
+          "og:url": "https://www.nokturnallifestyle.com",
+          "og:site_name": "Nokturnal Lifestyle Concierge",
+          "og:locale": "en_US",
+          "og:image:type": "image/png",
+          "og:image": "https://www.nokturnallifestyle.com/opengraph-image?31dec5cc76ca33ac",
+          "og:image:width": "1200",
+          "og:image:height": "630",
+          "og:type": "website"
+        },
+        "has_og_title": true,
+        "has_og_description": true,
+        "has_og_image": true,
+        "twitter_cards": {
+          "twitter:card": "summary_large_image",
+          "twitter:title": "Vegas VIP Concierge | Nightlife, Tables & Experiences | Nokturnal",
+          "twitter:description": "Plan your Las Vegas nightlife the right way. VIP table service, skip-the-line access, top clubs, pool parties, and personalized concierge experiences.",
+          "twitter:image:type": "image/png",
+          "twitter:image": "https://www.nokturnallifestyle.com/twitter-image?4e63294f6b89c49e",
+          "twitter:image:width": "1200",
+          "twitter:image:height": "630"
+        },
+        "has_twitter_card": true
+      },
+      "performance": {
+        "ssl": {
+          "valid": false,
+          "error": "dictionary update sequence element #0 has length 1; 2 is required"
+        },
+        "http_version": "HTTP/11",
+        "html_size_kb": 167.3
+      }
+    }
+  }
+]
