@@ -18,8 +18,9 @@ from scanner.technical import AIVisibilityScanner, scan_domain
 
 # Use absolute path for static folder
 _static_dir = str(_project_root / "static")
-_data_dir = _project_root / "data"
-app = Flask(__name__, static_folder=_static_dir, static_url_path="")
+# On Vercel, use /tmp since the filesystem is readonly
+_data_dir = Path("/tmp/data") if os.environ.get("VERCEL") else (_project_root / "data")
+app = Flask(__name__)
 
 DATA_DIR = _data_dir
 DATA_DIR.mkdir(exist_ok=True)
@@ -71,56 +72,62 @@ def index():
 @app.route("/api/scan", methods=["POST"])
 def api_scan():
     """Run a full visibility scan."""
-    data = request.get_json(silent=True) or {}
-    url = data.get("url", "").strip()
-    business_name = data.get("business_name", "").strip() or url
-    city = data.get("city", "").strip()
+    try:
+        data = request.get_json(silent=True) or {}
+        url = data.get("url", "").strip()
+        business_name = data.get("business_name", "").strip() or url
+        city = data.get("city", "").strip()
 
-    if not url:
-        return jsonify({"error": "URL is required"}), 400
+        if not url:
+            return jsonify({"error": "URL is required"}), 400
 
-    # Run technical scan using the class-based scanner
-    scanner = AIVisibilityScanner(url, business_name, city)
-    scanner.run_full_scan()
-    scanner.results["recommendations"] = scanner.generate_recommendations()
+        # Run technical scan using the class-based scanner
+        scanner = AIVisibilityScanner(url, business_name, city)
+        scanner.run_full_scan()
+        scanner.results["recommendations"] = scanner.generate_recommendations()
 
-    # Use the scanner's safe JSON method to strip all non-serializable objects
-    raw_results = scanner.to_json_safe()
+        # Use the scanner's safe JSON method to strip all non-serializable objects
+        raw_results = scanner.to_json_safe()
 
-    # Build clean output
-    result = {
-        "url": url,
-        "business_name": business_name,
-        "timestamp": raw_results.get("summary", {}).get("scan_timestamp", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())),
-        "overall_score": raw_results.get("scores", {}).get("overall", 0),
-        "grade": raw_results.get("scores", {}).get("grade", "N/A"),
-        "scores": raw_results.get("scores", {}),
-        "summary": raw_results.get("summary", {}),
-        "checks": raw_results.get("passes", []) + raw_results.get("warnings", []) + raw_results.get("issues", []),
-        "passes": raw_results.get("passes", []),
-        "warnings": raw_results.get("warnings", []),
-        "issues": raw_results.get("issues", []),
-        "recommendations": raw_results.get("recommendations", []),
-        "ai_visibility": None,
-        "competitors": [],
-        "details": {
-            "technical": raw_results.get("technical", {}),
-            "schema": raw_results.get("schema", {}),
-            "content": raw_results.get("content", {}),
-            "crawlers": raw_results.get("crawlers", {}),
-            "social": raw_results.get("social", {}),
-            "performance": raw_results.get("performance", {}),
-        },
-    }
+        # Build clean output
+        result = {
+            "url": url,
+            "business_name": business_name,
+            "timestamp": raw_results.get("summary", {}).get("scan_timestamp", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())),
+            "overall_score": raw_results.get("scores", {}).get("overall", 0),
+            "grade": raw_results.get("scores", {}).get("grade", "N/A"),
+            "scores": raw_results.get("scores", {}),
+            "summary": raw_results.get("summary", {}),
+            "checks": raw_results.get("passes", []) + raw_results.get("warnings", []) + raw_results.get("issues", []),
+            "passes": raw_results.get("passes", []),
+            "warnings": raw_results.get("warnings", []),
+            "issues": raw_results.get("issues", []),
+            "recommendations": raw_results.get("recommendations", []),
+            "ai_visibility": None,
+            "competitors": [],
+            "details": {
+                "technical": raw_results.get("technical", {}),
+                "schema": raw_results.get("schema", {}),
+                "content": raw_results.get("content", {}),
+                "crawlers": raw_results.get("crawlers", {}),
+                "social": raw_results.get("social", {}),
+                "performance": raw_results.get("performance", {}),
+            },
+        }
 
-    # Save for history/trends
-    from urllib.parse import urlparse
-    parsed = urlparse(url)
-    slug = parsed.netloc or url.replace("https://", "").replace("http://", "").split("/")[0]
-    slug = slug.replace(".", "_")
-    _save_scan(slug, result)
+        # Save for history/trends
+        from urllib.parse import urlparse
+        parsed = urlparse(url)
+        slug = parsed.netloc or url.replace("https://", "").replace("http://", "").split("/")[0]
+        slug = slug.replace(".", "_")
+        try:
+            _save_scan(slug, result)
+        except Exception:
+            pass  # non-critical, don't fail the scan
 
-    return jsonify(result)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/api/history", methods=["GET"])
