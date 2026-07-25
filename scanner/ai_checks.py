@@ -461,15 +461,73 @@ def run_ai_visibility_check(
             results.append(AiCheckResult(
                 engine=engine_name,
                 status="skipped",
-                prompt_used=primary_prompt,
+                prompt_used="",
                 response_summary="No API key configured",
                 mentioned=False,
             ))
             continue
 
-        result = checker_fn(key, primary_prompt, business_name, url)
-        results.append(result)
-        time.sleep(0.5)  # Rate limiting
+        # Run multiple prompts for better accuracy
+        found_count = 0
+        total_prompts = len(prompts)
+        all_competitors = []
+        best_position = None
+        sentiments = []
+
+        for pi, prompt in enumerate(prompts):
+            try:
+                result = checker_fn(key, prompt, business_name, url)
+                if result.status == "found":
+                    found_count += 1
+                if result.competitors:
+                    all_competitors.extend(result.competitors)
+                if result.position is not None and (best_position is None or result.position < best_position):
+                    best_position = result.position
+                if result.sentiment:
+                    sentiments.append(result.sentiment)
+            except Exception as e:
+                pass  # individual prompt failures don't crash the whole check
+            time.sleep(0.3)
+
+        # Compute aggregate status
+        if found_count == 0:
+            agg_status = "not_found"
+        elif found_count == total_prompts:
+            agg_status = "found"
+        else:
+            agg_status = "partial"
+
+        # Aggregate sentiment
+        agg_sentiment = None
+        if sentiments:
+            pos = sentiments.count("positive")
+            neg = sentiments.count("negative")
+            if pos > neg:
+                agg_sentiment = "positive"
+            elif neg > pos:
+                agg_sentiment = "negative"
+            else:
+                agg_sentiment = "mixed" if len(sentiments) > 1 else "neutral"
+
+        # Deduplicate competitors
+        seen = set()
+        unique_competitors = []
+        for c in all_competitors:
+            if c.lower() not in seen:
+                seen.add(c.lower())
+                unique_competitors.append(c)
+
+        results.append(AiCheckResult(
+            engine=engine_name,
+            status=agg_status,
+            prompt_used=f"{found_count}/{total_prompts} prompts matched",
+            response_summary=f"Found in {found_count} of {total_prompts} queries",
+            mentioned=found_count > 0,
+            position=best_position,
+            sentiment=agg_sentiment,
+            competitors=unique_competitors[:8],
+            raw_response_snippet="",
+        ))
 
     return AiVisibilityReport(
         url=url,
