@@ -1247,8 +1247,19 @@ function exportReport() {
     });
     lines.push('');
   }
-  // Summary
-  lines.push(`## Summary`);
+  // All Checks (pass, warn, fail)
+  lines.push(`## All Checks (${(d.passes||[]).length + (d.warnings||[]).length + (d.issues||[]).length} total)`);
+  const renderCheck = (arr, label) => {
+    if (!arr || !arr.length) return;
+    lines.push(`\n### ${label} (${arr.length})`);
+    arr.forEach(c => {
+      lines.push(`- ${c.message}${c.details ? ' — ' + c.details : ''}${c.fix ? '\\n  Fix: ' + c.fix : ''}`);
+    });
+  };
+  renderCheck(d.passes, 'Passed');
+  renderCheck(d.warnings, 'Warnings');
+  renderCheck(d.issues, 'Failed');
+  lines.push('');
   const sum = d.summary || {};
   lines.push(`- Total checks: ${sum.total_checks || 0}`);
   lines.push(`- Passed: ${sum.pass_count || 0}`);
