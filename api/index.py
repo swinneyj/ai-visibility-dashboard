@@ -81,13 +81,45 @@ def api_scan():
         if not url:
             return jsonify({"error": "URL is required"}), 400
 
-        # Run technical scan using the class-based scanner
+        # Read API keys: env vars first, request body overrides
+        ai_keys = {
+            "openai_key": data.get("openai_key") or os.environ.get("OPENAI_API_KEY", ""),
+            "anthropic_key": data.get("anthropic_key") or os.environ.get("ANTHROPIC_API_KEY", ""),
+            "gemini_key": data.get("gemini_key") or os.environ.get("GEMINI_API_KEY", ""),
+            "perplexity_key": data.get("perplexity_key") or os.environ.get("PERPLEXITY_API_KEY", ""),
+            "deepseek_key": data.get("deepseek_key") or os.environ.get("DEEPSEEK_API_KEY", ""),
+        }
+        has_ai_keys = any(v for v in ai_keys.values())
+
+        # Run technical scan
         scanner = AIVisibilityScanner(url, business_name, city)
         scanner.run_full_scan()
         scanner.results["recommendations"] = scanner.generate_recommendations()
-
-        # Use the scanner's safe JSON method to strip all non-serializable objects
         raw_results = scanner.to_json_safe()
+
+        # Run AI visibility checks if any keys configured
+        ai_result = None
+        if has_ai_keys:
+            from scanner.ai_checks import run_ai_visibility_check
+            ai_report = run_ai_visibility_check(
+                url=url,
+                business_name=business_name,
+                **ai_keys,
+            )
+            ai_result = ai_report.to_dict()
+            # Add AI-based recommendations
+            for r in ai_result.get("results", []):
+                if r["status"] == "not_found":
+                    raw_results.setdefault("recommendations", []).append({
+                        "priority": "high",
+                        "category": "ai_visibility",
+                        "check": f"AI Visibility: {r['engine']}",
+                        "message": f"Not found in {r['engine']} for: \"{r.get('prompt_used','')[:60]}\"",
+                        "fix": f"Improve content and citations to appear in {r['engine']} responses.",
+                    })
+                elif r["status"] == "found" and r.get("competitors"):
+                    for comp in r["competitors"][:3]:
+                        raw_results.setdefault("competitors", []).append(comp)
 
         # Build clean output
         result = {
@@ -103,8 +135,8 @@ def api_scan():
             "warnings": raw_results.get("warnings", []),
             "issues": raw_results.get("issues", []),
             "recommendations": raw_results.get("recommendations", []),
-            "ai_visibility": None,
-            "competitors": [],
+            "ai_visibility": ai_result,
+            "competitors": list(dict.fromkeys(raw_results.get("competitors", []))),
             "details": {
                 "technical": raw_results.get("technical", {}),
                 "schema": raw_results.get("schema", {}),
