@@ -146,6 +146,8 @@ def api_scan():
                 "performance": raw_results.get("performance", {}),
             },
         }
+        result["previous_score"] = 0
+        result["score_change"] = 0
 
         # Save for history/trends
         from urllib.parse import urlparse
@@ -153,13 +155,42 @@ def api_scan():
         slug = parsed.netloc or url.replace("https://", "").replace("http://", "").split("/")[0]
         slug = slug.replace(".", "_")
         try:
+            history = _load_history(slug)
+            if history:
+                result["previous_score"] = history[-1].get("overall_score", 0)
+                result["score_change"] = result["overall_score"] - result["previous_score"]
             _save_scan(slug, result)
         except Exception:
-            pass  # non-critical, don't fail the scan
+            pass  # non-critical
 
         return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/history/list")
+def api_history_list():
+    """List all domains with scan history."""
+    entries = []
+    for f in DATA_DIR.glob("*.json"):
+        if f.name == "history.json":
+            continue
+        try:
+            with open(f) as fh:
+                data = json.load(fh)
+                if isinstance(data, list) and data:
+                    latest = data[-1]
+                    entries.append({
+                        "domain": f.stem.replace("_", "."),
+                        "last_scan": latest.get("timestamp", ""),
+                        "score": latest.get("overall_score", 0),
+                        "grade": latest.get("grade", ""),
+                        "count": len(data),
+                    })
+        except (json.JSONDecodeError, OSError):
+            pass
+    entries.sort(key=lambda e: e.get("last_scan", ""), reverse=True)
+    return jsonify({"entries": entries})
 
 
 @app.route("/api/history", methods=["GET"])

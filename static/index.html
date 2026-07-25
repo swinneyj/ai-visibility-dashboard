@@ -615,6 +615,7 @@
   <div class="container">
     <div class="logo">AI Visibility <span>Dashboard</span> <span class="logo-sub">by AIEO</span></div>
     <div>
+      <button class="btn btn-sm btn-secondary" onclick="toggleHistory()">History</button>
       <button class="btn btn-sm btn-secondary" onclick="exportReport()">Download Report</button>
       <button class="btn btn-sm btn-secondary" onclick="toggleConfig()">API Keys</button>
       <button class="btn btn-sm btn-secondary" onclick="document.getElementById('url-input').focus(); document.getElementById('url-input').select()">New Scan</button>
@@ -650,7 +651,21 @@
       </div>
     </div>
     <div style="margin-top:10px;text-align:right;">
-      <button class="btn btn-sm btn-secondary" onclick="saveKeys()">Save to Session</button>
+      <button class="btn btn-sm btn-secondary" onclick="saveKeys()">Save to Browser</button>
+    </div>
+  </div>
+
+  <!-- History Panel -->
+  <div class="config-section" id="history-section">
+    <h3>Scan History</h3>
+    <p>Previous scans across all domains.</p>
+    <div id="history-list" style="font-size:13px;">
+      <div style="color:var(--text-dim);text-align:center;padding:12px;">Loading...</div>
+    </div>
+    <div id="history-detail" style="display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+      <h4 id="history-domain-name" style="font-size:14px;font-weight:600;margin-bottom:8px;"></h4>
+      <div id="history-scan-list"></div>
+      <button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="document.getElementById('history-detail').style.display='none'">Back</button>
     </div>
   </div>
 
@@ -790,6 +805,68 @@ function saveKeys() {
   });
   alert('API keys saved to your browser (persist across sessions).');
   document.getElementById('config-section').classList.remove('active');
+}
+
+function toggleHistory() {
+  const section = document.getElementById('history-section');
+  const list = document.getElementById('history-list');
+  section.classList.toggle('active');
+  if (section.classList.contains('active')) loadHistory();
+}
+
+async function loadHistory() {
+  const list = document.getElementById('history-list');
+  list.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:12px;">Loading...</div>';
+  try {
+    const resp = await fetch('/api/history/list');
+    const data = await resp.json();
+    const entries = data.entries || [];
+    if (entries.length === 0) {
+      list.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:12px;">No scans yet.</div>';
+      return;
+    }
+    list.innerHTML = entries.map(e => {
+      const date = e.last_scan ? new Date(e.last_scan).toLocaleDateString() : '?';
+      return `<div class="history-entry" style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="loadDomainHistory('${e.domain}')">
+        <div><strong>${e.domain}</strong><br><span style="color:var(--text-dim);font-size:11px;">${date} · ${e.count} scan(s)</span></div>
+        <div style="text-align:right;"><span style="font-size:18px;font-weight:700;color:${e.score >= 70 ? 'var(--green)' : e.score >= 40 ? 'var(--yellow)' : 'var(--red)'}">${e.score}</span><br><span style="font-size:11px;color:var(--text-dim)">${e.grade}</span></div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = `<div style="color:var(--red);text-align:center;padding:12px;">Error loading: ${e.message}</div>`;
+  }
+}
+
+async function loadDomainHistory(domain) {
+  document.getElementById('history-detail').style.display = 'block';
+  document.getElementById('history-domain-name').textContent = domain;
+  const list = document.getElementById('history-scan-list');
+  list.innerHTML = '<div style="color:var(--text-dim);padding:8px;">Loading...</div>';
+  try {
+    const resp = await fetch(`/api/history?url=${encodeURIComponent('https://' + domain)}`);
+    const data = await resp.json();
+    const scans = data.history || [];
+    list.innerHTML = scans.map((s, i) => {
+      const date = s.timestamp ? new Date(s.timestamp).toLocaleString() : '?';
+      const change = i > 0 ? scans[i].overall_score - scans[i-1].overall_score : 0;
+      const changeStr = change !== 0 ? (change > 0 ? `<span style="color:var(--green)">+${change}</span>` : `<span style="color:var(--red)">${change}</span>`) : '';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="loadScan('${domain}', ${i})">
+        <div style="font-size:12px;color:var(--text-muted)">${date}</div>
+        <div><span style="font-weight:700">${s.overall_score || '?'}</span> ${changeStr}</div>
+      </div>`;
+    }).join('');
+    if (scans.length > 0) {
+      list.innerHTML += '<div style="margin-top:10px"><button class="btn btn-sm btn-primary" onclick="loadScan(\'' + domain + '\', ' + (scans.length-1) + ')">Load Latest Scan</button></div>';
+    }
+  } catch(e) {
+    list.innerHTML = `<div style="color:var(--red);padding:8px;">Error: ${e.message}</div>`;
+  }
+}
+
+function loadScan(domain, index) {
+  document.getElementById('history-section').classList.remove('active');
+  document.getElementById('url-input').value = domain;
+  setTimeout(() => startScan(), 100);
 }
 
 function getKeys() {
@@ -932,9 +1009,16 @@ function renderDashboard(data) {
   scoreEl.textContent = gradeDisplay;
   scoreEl.className = 'score-number ' + (score >= 70 ? 'good' : score >= 40 ? 'ok' : 'bad');
 
+  // Score change indicator
+  const subtitle = document.getElementById('score-subtitle');
   const totalChecks = data.summary?.total_checks || 0;
-  document.getElementById('score-subtitle').textContent =
-    `Scanned ${totalChecks} technical checks`;
+  let subtitleText = `Scanned ${totalChecks} technical checks`;
+  if (data.score_change && data.score_change !== 0) {
+    const arrow = data.score_change > 0 ? '▲' : '▼';
+    const color = data.score_change > 0 ? 'var(--green)' : 'var(--red)';
+    subtitleText += ` · <span style="color:${color}">${arrow} ${Math.abs(data.score_change)} pts from last scan</span>`;
+  }
+  subtitle.innerHTML = subtitleText;
 
   // Engine visibility grid
   renderEngineGrid(data.ai_visibility);
