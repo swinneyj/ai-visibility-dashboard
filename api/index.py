@@ -169,6 +169,20 @@ def api_trends():
     return jsonify({"url": url, "trends": trends})
 
 
+@app.route("/api/keys/status")
+def api_keys_status():
+    """Return which API keys are configured via environment variables (without exposing values)."""
+    env_keys = {
+        "openai": bool(os.environ.get("OPENAI_API_KEY", "")),
+        "anthropic": bool(os.environ.get("ANTHROPIC_API_KEY", "")),
+        "gemini": bool(os.environ.get("GEMINI_API_KEY", "")),
+        "perplexity": bool(os.environ.get("PERPLEXITY_API_KEY", "")),
+        "deepseek": bool(os.environ.get("DEEPSEEK_API_KEY", "")),
+    }
+    configured = [k for k, v in env_keys.items() if v]
+    return jsonify({"env_configured": configured})
+
+
 # Error handlers — return JSON, never HTML
 @app.errorhandler(404)
 def not_found(e):

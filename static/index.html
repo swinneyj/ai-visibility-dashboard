@@ -757,13 +757,24 @@ let currentData = null;
 let trendChart = null;
 let currentFilter = 'all';
 
-// Load saved keys from localStorage
-document.addEventListener('DOMContentLoaded', () => {
+// Load saved keys from localStorage + check server env variables
+document.addEventListener('DOMContentLoaded', async () => {
   const keys = ['openai', 'anthropic', 'gemini', 'perplexity', 'deepseek'];
   keys.forEach(k => {
     const val = localStorage.getItem(`api_key_${k}`);
     if (val) document.getElementById(`key-${k}`).value = val;
   });
+  // Check which keys are set server-side (env vars)
+  try {
+    const resp = await fetch('/api/keys/status');
+    const data = await resp.json();
+    if (data.env_configured && data.env_configured.length > 0) {
+      const msg = document.createElement('div');
+      msg.style.cssText = 'font-size:12px;color:var(--green);margin-top:8px;';
+      msg.textContent = `Server keys configured: ${data.env_configured.join(', ')}`;
+      document.getElementById('config-section').querySelector('p').after(msg);
+    }
+  } catch(e) {}
 });
 
 function toggleConfig() {
