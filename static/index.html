@@ -1253,7 +1253,11 @@ function exportReport() {
     if (!arr || !arr.length) return;
     lines.push(`\n### ${label} (${arr.length})`);
     arr.forEach(c => {
-      lines.push(`- ${c.message}${c.details ? ' — ' + c.details : ''}${c.fix ? '\\n  Fix: ' + c.fix : ''}`);
+      const name = c.check || c.name || '';
+      const msg = c.message || '';
+      const details = c.details ? ` — ${c.details}` : '';
+      const fix = c.fix ? `\n  **Fix:** ${c.fix}` : '';
+      lines.push(`- **${name}**: ${msg}${details}${fix}`);
     });
   };
   renderCheck(d.passes, 'Passed');
