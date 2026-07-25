@@ -72,14 +72,46 @@ class AIVisibilityScanner:
         self.passes: List[Dict] = []
         self.warnings: List[Dict] = []
 
+    CHECK_CATEGORIES = {
+        "llms.txt": "geo",
+        "robots.txt": "geo",
+        "sitemap.xml": "geo",
+        "markdown_negotiation": "geo",
+        "schema": "geo",
+        "open_graph": "geo",
+        "twitter_cards": "geo",
+        "title_tag": "technical",
+        "meta_description": "technical",
+        "canonical": "technical",
+        "viewport": "technical",
+        "language": "technical",
+        "headings": "technical",
+        "page_access": "technical",
+        "ssl": "technical",
+        "http2": "technical",
+        "page_size": "technical",
+        "content_length": "content",
+        "content_structure": "content",
+        "content_paragraphs": "content",
+        "image_alt": "content",
+        "contact_info": "content",
+        "internal_links": "content",
+        "citations": "authority",
+        "backlinks": "authority",
+        "reviews": "authority",
+    }
+
     def _add_pass(self, check: str, message: str, details: str = ""):
-        self.passes.append({"check": check, "message": message, "details": details})
+        category = self.CHECK_CATEGORIES.get(check, "technical")
+        self.passes.append({"check": check, "message": message, "details": details, "category": category})
 
     def _add_warn(self, check: str, message: str, details: str = "", fix: str = ""):
-        self.warnings.append({"check": check, "message": message, "details": details, "fix": fix})
+        category = self.CHECK_CATEGORIES.get(check, "technical")
+        self.warnings.append({"check": check, "message": message, "details": details, "fix": fix, "category": category})
 
     def _add_issue(self, check: str, message: str, details: str = "", fix: str = ""):
-        self.issues.append({"check": check, "message": message, "details": details, "fix": fix})
+        category = self.CHECK_CATEGORIES.get(check, "technical")
+        self.issues.append({"check": check, "message": message, "details": details, "fix": fix, "category": category})
 
     def to_json_safe(self) -> Dict:
         """Return scan results without non-serializable objects."""
