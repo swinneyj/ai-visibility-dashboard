@@ -15,49 +15,11 @@ if str(_project_root) not in sys.path:
 from flask import Flask, jsonify, request
 
 from scanner.technical import AIVisibilityScanner, scan_domain
+from scanner.storage import save_scan, load_history, list_scans
 
 # Use absolute path for static folder
 _static_dir = str(_project_root / "static")
-# On Vercel, use /tmp since the filesystem is readonly
-_data_dir = Path("/tmp/data") if os.environ.get("VERCEL") else (_project_root / "data")
 app = Flask(__name__)
-
-DATA_DIR = _data_dir
-DATA_DIR.mkdir(exist_ok=True)
-
-
-def _save_scan(slug: str, data: dict) -> None:
-    """Save scan result to disk."""
-    filepath = DATA_DIR / f"{slug}.json"
-    history = []
-    if filepath.exists():
-        try:
-            with open(filepath) as f:
-                existing = json.load(f)
-                if isinstance(existing, list):
-                    history = existing
-                else:
-                    history = [existing]
-        except (json.JSONDecodeError, OSError):
-            history = []
-    history.append(data)
-    if len(history) > 30:
-        history = history[-30:]
-    with open(filepath, "w") as f:
-        json.dump(history, f, indent=2)
-
-
-def _load_history(slug: str) -> list[dict]:
-    """Load scan history for a domain."""
-    filepath = DATA_DIR / f"{slug}.json"
-    if filepath.exists():
-        try:
-            with open(filepath) as f:
-                data = json.load(f)
-                return data if isinstance(data, list) else [data]
-        except (json.JSONDecodeError, OSError):
-            return []
-    return []
 
 
 @app.route("/")
@@ -149,17 +111,17 @@ def api_scan():
         result["previous_score"] = 0
         result["score_change"] = 0
 
-        # Save for history/trends
+        # Save for history/trends (KV in prod, file fallback locally)
         from urllib.parse import urlparse
         parsed = urlparse(url)
         slug = parsed.netloc or url.replace("https://", "").replace("http://", "").split("/")[0]
         slug = slug.replace(".", "_")
         try:
-            history = _load_history(slug)
+            history = load_history(slug)
             if history:
                 result["previous_score"] = history[-1].get("overall_score", 0)
                 result["score_change"] = result["overall_score"] - result["previous_score"]
-            _save_scan(slug, result)
+            save_scan(slug, result)
         except Exception:
             pass  # non-critical
 
@@ -171,25 +133,7 @@ def api_scan():
 @app.route("/api/history/list")
 def api_history_list():
     """List all domains with scan history."""
-    entries = []
-    for f in DATA_DIR.glob("*.json"):
-        if f.name == "history.json":
-            continue
-        try:
-            with open(f) as fh:
-                data = json.load(fh)
-                if isinstance(data, list) and data:
-                    latest = data[-1]
-                    entries.append({
-                        "domain": f.stem.replace("_", "."),
-                        "last_scan": latest.get("timestamp", ""),
-                        "score": latest.get("overall_score", 0),
-                        "grade": latest.get("grade", ""),
-                        "count": len(data),
-                    })
-        except (json.JSONDecodeError, OSError):
-            pass
-    entries.sort(key=lambda e: e.get("last_scan", ""), reverse=True)
+    entries = list_scans()
     return jsonify({"entries": entries})
 
 
@@ -203,7 +147,7 @@ def api_history():
     parsed = urlparse(url)
     slug = parsed.netloc or url.replace("https://", "").replace("http://", "").split("/")[0]
     slug = slug.replace(".", "_")
-    history = _load_history(slug)
+    history = load_history(slug)
     return jsonify({"url": url, "history": history, "count": len(history)})
 
 
@@ -217,7 +161,7 @@ def api_trends():
     parsed = urlparse(url)
     slug = parsed.netloc or url.replace("https://", "").replace("http://", "").split("/")[0]
     slug = slug.replace(".", "_")
-    history = _load_history(slug)
+    history = load_history(slug)
 
     trends = []
     for entry in history:
