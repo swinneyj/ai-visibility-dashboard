@@ -639,10 +639,19 @@ class AIVisibilityScanner:
             with socket.create_connection((hostname, 443), timeout=10) as sock:
                 with ctx.wrap_socket(sock, server_hostname=hostname) as ssock:
                     cert = ssock.getpeercert()
+                    issuer = "Unknown"
+                    if cert:
+                        issuer_raw = cert.get("issuer", [])
+                        for item in issuer_raw:
+                            if isinstance(item, tuple) and len(item) >= 2:
+                                k, v = item[0], item[1]
+                                if "organizationName" in str(k):
+                                    issuer = str(v)
+                                    break
                     perf["ssl"] = {
                         "valid": True,
-                        "issuer": dict(cert.get("issuer", [])).get("organizationName", "Unknown"),
-                        "expiry": cert.get("notAfter", "Unknown"),
+                        "issuer": issuer,
+                        "expiry": cert.get("notAfter", "Unknown") if cert else "Unknown",
                     }
             self._add_pass("ssl", "Valid SSL certificate", f"Issuer: {perf['ssl']['issuer']}")
         except Exception as e:
