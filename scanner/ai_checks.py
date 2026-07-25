@@ -358,6 +358,79 @@ def check_perplexity(api_key: str, prompt: str, business_name: str, url: str) ->
         )
 
 
+def check_deepseek(api_key: str, prompt: str, business_name: str, url: str) -> AiCheckResult:
+    """Check if business appears in DeepSeek response (OpenAI-compatible API)."""
+    try:
+        resp = requests.post(
+            "https://api.deepseek.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "deepseek-chat",
+                "messages": [
+                    {"role": "system", "content": "You are a helpful assistant. Provide concise answers."},
+                    {"role": "user", "content": prompt},
+                ],
+                "max_tokens": 500,
+                "temperature": 0.3,
+            },
+            timeout=30,
+        )
+        if resp.status_code != 200:
+            return AiCheckResult(
+                engine="DeepSeek",
+                status="error",
+                prompt_used=prompt,
+                response_summary=f"API error: {resp.status_code}",
+                mentioned=False,
+                error=resp.text[:200],
+            )
+
+        data = resp.json()
+        content = data["choices"][0]["message"]["content"]
+
+        name_lower = business_name.lower()
+        url_lower = url.lower().replace("https://", "").replace("http://", "").rstrip("/")
+        mentioned = name_lower in content.lower() or url_lower in content.lower()
+
+        sentiment = None
+        if mentioned:
+            positive_words = ["great", "excellent", "recommended", "top", "best", "leading", "trusted"]
+            negative_words = ["poor", "bad", "avoid", "not recommended", "issues", "problems"]
+            content_lower = content.lower()
+            pos_count = sum(1 for w in positive_words if w in content_lower)
+            neg_count = sum(1 for w in negative_words if w in content_lower)
+            if pos_count > neg_count:
+                sentiment = "positive"
+            elif neg_count > pos_count:
+                sentiment = "negative"
+            else:
+                sentiment = "neutral"
+
+        return AiCheckResult(
+            engine="DeepSeek",
+            status="found" if mentioned else "not_found",
+            prompt_used=prompt,
+            response_summary=content[:200],
+            mentioned=mentioned,
+            position=None,
+            sentiment=sentiment,
+            raw_response_snippet=content[:500],
+        )
+
+    except requests.RequestException as e:
+        return AiCheckResult(
+            engine="DeepSeek",
+            status="error",
+            prompt_used=prompt,
+            response_summary=f"Request failed: {str(e)[:100]}",
+            mentioned=False,
+            error=str(e),
+        )
+
+
 def run_ai_visibility_check(
     url: str,
     business_name: str,
@@ -366,6 +439,7 @@ def run_ai_visibility_check(
     anthropic_key: str | None = None,
     gemini_key: str | None = None,
     perplexity_key: str | None = None,
+    deepseek_key: str | None = None,
 ) -> AiVisibilityReport:
     """Run AI visibility checks across configured engines."""
     prompts = generate_prompts(business_name, url, industry_keywords)
@@ -379,6 +453,7 @@ def run_ai_visibility_check(
         ("Claude", anthropic_key, check_claude),
         ("Gemini", gemini_key, check_gemini),
         ("Perplexity", perplexity_key, check_perplexity),
+        ("DeepSeek", deepseek_key, check_deepseek),
     ]
 
     for engine_name, key, checker_fn in engines:

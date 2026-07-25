@@ -643,6 +643,10 @@
         <label>Perplexity</label>
         <input type="password" id="key-perplexity" placeholder="pplx-..." value="">
       </div>
+      <div class="config-field">
+        <label>DeepSeek</label>
+        <input type="password" id="key-deepseek" placeholder="sk-..." value="">
+      </div>
     </div>
     <div style="margin-top:10px;text-align:right;">
       <button class="btn btn-sm btn-secondary" onclick="saveKeys()">Save to Session</button>
@@ -755,7 +759,7 @@ let currentFilter = 'all';
 
 // Load saved keys from sessionStorage
 document.addEventListener('DOMContentLoaded', () => {
-  const keys = ['openai', 'anthropic', 'gemini', 'perplexity'];
+  const keys = ['openai', 'anthropic', 'gemini', 'perplexity', 'deepseek'];
   keys.forEach(k => {
     const val = sessionStorage.getItem(`api_key_${k}`);
     if (val) document.getElementById(`key-${k}`).value = val;
@@ -767,7 +771,7 @@ function toggleConfig() {
 }
 
 function saveKeys() {
-  const keys = ['openai', 'anthropic', 'gemini', 'perplexity'];
+  const keys = ['openai', 'anthropic', 'gemini', 'perplexity', 'deepseek'];
   keys.forEach(k => {
     const val = document.getElementById(`key-${k}`).value;
     if (val) sessionStorage.setItem(`api_key_${k}`, val);
@@ -782,6 +786,7 @@ function getKeys() {
     anthropic_key: document.getElementById('key-anthropic').value || sessionStorage.getItem('api_key_anthropic') || '',
     gemini_key: document.getElementById('key-gemini').value || sessionStorage.getItem('api_key_gemini') || '',
     perplexity_key: document.getElementById('key-perplexity').value || sessionStorage.getItem('api_key_perplexity') || '',
+    deepseek_key: document.getElementById('key-deepseek').value || sessionStorage.getItem('api_key_deepseek') || '',
   };
 }
 
