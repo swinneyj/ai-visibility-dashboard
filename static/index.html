@@ -757,11 +757,11 @@ let currentData = null;
 let trendChart = null;
 let currentFilter = 'all';
 
-// Load saved keys from sessionStorage
+// Load saved keys from localStorage
 document.addEventListener('DOMContentLoaded', () => {
   const keys = ['openai', 'anthropic', 'gemini', 'perplexity', 'deepseek'];
   keys.forEach(k => {
-    const val = sessionStorage.getItem(`api_key_${k}`);
+    const val = localStorage.getItem(`api_key_${k}`);
     if (val) document.getElementById(`key-${k}`).value = val;
   });
 });
@@ -774,19 +774,19 @@ function saveKeys() {
   const keys = ['openai', 'anthropic', 'gemini', 'perplexity', 'deepseek'];
   keys.forEach(k => {
     const val = document.getElementById(`key-${k}`).value;
-    if (val) sessionStorage.setItem(`api_key_${k}`, val);
+    if (val) localStorage.setItem(`api_key_${k}`, val);
   });
-  alert('API keys saved to session (cleared when you close the tab).');
+  alert('API keys saved to your browser (persist across sessions).');
   document.getElementById('config-section').classList.remove('active');
 }
 
 function getKeys() {
   return {
-    openai_key: document.getElementById('key-openai').value || sessionStorage.getItem('api_key_openai') || '',
-    anthropic_key: document.getElementById('key-anthropic').value || sessionStorage.getItem('api_key_anthropic') || '',
-    gemini_key: document.getElementById('key-gemini').value || sessionStorage.getItem('api_key_gemini') || '',
-    perplexity_key: document.getElementById('key-perplexity').value || sessionStorage.getItem('api_key_perplexity') || '',
-    deepseek_key: document.getElementById('key-deepseek').value || sessionStorage.getItem('api_key_deepseek') || '',
+    openai_key: document.getElementById('key-openai').value || localStorage.getItem('api_key_openai') || '',
+    anthropic_key: document.getElementById('key-anthropic').value || localStorage.getItem('api_key_anthropic') || '',
+    gemini_key: document.getElementById('key-gemini').value || localStorage.getItem('api_key_gemini') || '',
+    perplexity_key: document.getElementById('key-perplexity').value || localStorage.getItem('api_key_perplexity') || '',
+    deepseek_key: document.getElementById('key-deepseek').value || localStorage.getItem('api_key_deepseek') || '',
   };
 }
 
