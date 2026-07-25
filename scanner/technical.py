@@ -94,11 +94,10 @@ class AIVisibilityScanner:
         "content_structure": "content",
         "content_paragraphs": "content",
         "image_alt": "content",
-        "contact_info": "content",
+        "contact_info": "authority",
         "internal_links": "content",
-        "citations": "authority",
-        "backlinks": "authority",
-        "reviews": "authority",
+        "aggregate_rating": "authority",
+        "social_links": "authority",
     }
 
     def _add_pass(self, check: str, message: str, details: str = ""):
@@ -484,9 +483,53 @@ class AIVisibilityScanner:
                           "Add Organization, LocalBusiness, FAQPage, and BreadcrumbList schema")
         else:
             self._add_issue("schema", "No relevant schema.org structured data found",
-                          "AI engines heavily rely on structured data for understanding businesses",
-                          "Add JSON-LD structured data: Organization, LocalBusiness, FAQPage, BreadcrumbList")
-        
+                          "", "Add schema.org structured data (JSON-LD)")
+
+        # Authority: Check for aggregate rating / reviews in schema
+        has_rating = any(
+            item.get("aggregateRating") for item in all_schemas
+            if isinstance(item.get("aggregateRating"), dict)
+        )
+        schema["has_aggregate_rating"] = has_rating
+        if has_rating:
+            rating_data = None
+            for item in all_schemas:
+                ar = item.get("aggregateRating")
+                if isinstance(ar, dict):
+                    rating_data = ar
+                    break
+            rating_str = ""
+            if rating_data:
+                rv = rating_data.get("ratingValue", "")
+                rc = rating_data.get("reviewCount", "")
+                rating_str = f" ({rv}/5 from {rc} reviews)"
+            self._add_pass("aggregate_rating", f"Aggregate rating found{rating_str}",
+                          "Reviews and ratings boost AI citation trust signals")
+        else:
+            self._add_warn("aggregate_rating", "No aggregate rating / review data in schema",
+                          "AI engines trust businesses with verifiable reviews",
+                          "Add AggregateRating schema with your review count and rating")
+
+        # Authority: Check for sameAs social links
+        same_as_links = []
+        for item in all_schemas:
+            sa = item.get("sameAs", [])
+            if isinstance(sa, list):
+                same_as_links.extend(sa)
+            elif isinstance(sa, str):
+                same_as_links.append(sa)
+        schema["same_as_links"] = same_as_links
+        if len(same_as_links) >= 2:
+            self._add_pass("social_links", f"Social media presence ({len(same_as_links)} profiles)",
+                          ', '.join(same_as_links[:4]))
+        elif len(same_as_links) > 0:
+            self._add_pass("social_links", f"Social media presence ({len(same_as_links)} profile)",
+                          ', '.join(same_as_links))
+        else:
+            self._add_warn("social_links", "No social media links in schema",
+                          "AI models cross-reference social profiles for authority",
+                          "Add sameAs links in your JSON-LD schema pointing to Facebook, Instagram, etc.")
+
         # Check for specific critical schemas
         schema["has_organization"] = "Organization" in schema_types_found
         schema["has_local_business"] = any(t in schema_types_found for t in 

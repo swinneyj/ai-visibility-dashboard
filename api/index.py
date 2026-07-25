@@ -74,7 +74,7 @@ def api_scan():
                 if r["status"] == "not_found":
                     raw_results.setdefault("recommendations", []).append({
                         "priority": "high",
-                        "category": "ai_visibility",
+                        "category": "authority",
                         "check": f"AI Visibility: {r['engine']}",
                         "message": f"Not found in {r['engine']} for: \"{r.get('prompt_used','')[:60]}\"",
                         "fix": f"Improve content and citations to appear in {r['engine']} responses.",
