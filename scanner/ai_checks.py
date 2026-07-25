@@ -22,8 +22,8 @@ class AiCheckResult:
     prompt_used: str
     response_summary: str
     mentioned: bool
-    position: int | None  # 1-based position if mentioned
-    sentiment: str | None  # positive | neutral | negative | mixed
+    position: int | None = None  # 1-based position if mentioned
+    sentiment: str | None = None  # positive | neutral | negative | mixed
     competitors: list[str] = field(default_factory=list)
     error: str | None = None
     raw_response_snippet: str = ""
